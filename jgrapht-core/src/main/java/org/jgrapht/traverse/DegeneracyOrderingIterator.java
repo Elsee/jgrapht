@@ -17,17 +17,12 @@
  */
 package org.jgrapht.traverse;
 
-import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Objects;
-import java.util.Set;
-
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.event.VertexTraversalEvent;
+
+import java.lang.reflect.Array;
+import java.util.*;
 
 /**
  * A degeneracy ordering iterator for graphs.
@@ -42,7 +37,7 @@ import org.jgrapht.event.VertexTraversalEvent;
  * The iterator crosses components but does not track them, it only tracks visited vertices.
  * 
  * <p>
- * The iterator treats the input graph as undirected even if the graph is directed. Moreover, it
+ * The iterator treats the input graph as undirected. Moreover, it
  * completely ignores self-loops, meaning that it operates as if self-loops do not contribute to the
  * degree of a vertex.
  * 

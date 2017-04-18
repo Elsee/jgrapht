@@ -17,11 +17,12 @@
  */
 package org.jgrapht.ext;
 
-import java.io.*;
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.AbstractBaseGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * Exports a graph into a DOT file.
@@ -164,13 +165,8 @@ public class DOTExporter<V, E>
                 "Generated graph ID '" + graphId
                     + "' is not valid with respect to the .dot language");
         }
-        if (g instanceof DirectedGraph<?, ?>) {
-            header += DOTUtils.DIRECTED_GRAPH_KEYWORD;
-            connector = " " + DOTUtils.DIRECTED_GRAPH_EDGEOP + " ";
-        } else {
-            header += DOTUtils.UNDIRECTED_GRAPH_KEYWORD;
-            connector = " " + DOTUtils.UNDIRECTED_GRAPH_EDGEOP + " ";
-        }
+        header += DOTUtils.UNDIRECTED_GRAPH_KEYWORD;
+        connector = " " + DOTUtils.UNDIRECTED_GRAPH_EDGEOP + " ";
         header += " " + graphId + " {";
         out.println(header);
         for (V v : g.vertexSet()) {

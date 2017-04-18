@@ -17,9 +17,12 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
 
-import org.jgrapht.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Create a random bipartite graph based on the G(n, p) Erdős–Rényi model. See the Wikipedia article
@@ -29,7 +32,7 @@ import org.jgrapht.*;
  * .
  * 
  * The user provides the sizes n1 and n2 of the two partitions (n1+n2=n) and the probability p of
- * the existence of an edge. The generator supports both directed and undirected graphs.
+ * the existence of an edge. The generator supports undirected graphs.
  *
  * @author Dimitrios Michail
  * @since September 2016
@@ -143,9 +146,6 @@ public class GnpRandomBipartiteGraphGenerator<V, E>
                 "Vertex factory did not produce " + (n1 + n2) + " distinct vertices.");
         }
 
-        // check if graph is directed
-        boolean isDirected = target.getType().isDirected();
-
         // create edges
         for (int i = 0; i < n1; i++) {
             V s = partitionA.get(i);
@@ -155,13 +155,6 @@ public class GnpRandomBipartiteGraphGenerator<V, E>
                 // s->t
                 if (rng.nextDouble() < p) {
                     target.addEdge(s, t);
-                }
-
-                if (isDirected) {
-                    // t->s
-                    if (rng.nextDouble() < p) {
-                        target.addEdge(t, s);
-                    }
                 }
             }
         }

@@ -17,21 +17,19 @@
  */
 package org.jgrapht.io;
 
-import java.io.ByteArrayOutputStream;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import junit.framework.TestCase;
 import org.custommonkey.xmlunit.XMLAssert;
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
 import org.jgrapht.graph.SimpleWeightedGraph;
 import org.jgrapht.io.GraphMLExporter.AttributeCategory;
 import org.jgrapht.io.GraphMLExporter.AttributeType;
 
-import junit.framework.TestCase;
+import java.io.ByteArrayOutputStream;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Trevor Harmon
@@ -119,41 +117,6 @@ public class GraphMLExporterTest
 
         GraphMLExporter<String, DefaultEdge> exporter = new GraphMLExporter<>();
         exporter.setExportEdgeWeights(true);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        exporter.exportGraph(g, os);
-        String res = new String(os.toByteArray(), "UTF-8");
-        XMLAssert.assertXMLEqual(output, res);
-    }
-
-    public void testDirected()
-        throws Exception
-    {
-        String output =
-            // @formatter:off
-				"<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + NL
-				+ "<graphml xmlns=\"http://graphml.graphdrawing.org/xmlns\" "
-				+ "xsi:schemaLocation=\"http://graphml.graphdrawing.org/xmlns "
-				+ "http://graphml.graphdrawing.org/xmlns/1.0/graphml.xsd\" "
-				+ "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + NL
-				+ "<graph edgedefault=\"directed\">" + NL 
-				+ "<node id=\"1\"/>" + NL 
-				+ "<node id=\"2\"/>" + NL
-				+ "<node id=\"3\"/>" + NL 
-				+ "<edge id=\"1\" source=\"1\" target=\"2\"/>" + NL
-				+ "<edge id=\"2\" source=\"3\" target=\"1\"/>" + NL 
-				+ "</graph>" + NL 
-				+ "</graphml>" + NL;
-		    // @formatter:on
-
-        Graph<String, DefaultEdge> g =
-            new SimpleDirectedGraph<String, DefaultEdge>(DefaultEdge.class);
-        g.addVertex(V1);
-        g.addVertex(V2);
-        g.addEdge(V1, V2);
-        g.addVertex(V3);
-        g.addEdge(V3, V1);
-
-        GraphMLExporter<String, DefaultEdge> exporter = new GraphMLExporter<>();
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         exporter.exportGraph(g, os);
         String res = new String(os.toByteArray(), "UTF-8");

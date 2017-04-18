@@ -17,18 +17,20 @@
  */
 package org.jgrapht.alg.matching;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.MatchingAlgorithm;
+import org.jgrapht.alg.util.Pair;
+import org.jgrapht.alg.util.ToleranceDoubleComparator;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.util.*;
+import java.util.*;
 
 /**
  * A linear time 1/2-approximation algorithm for finding a maximum weight matching in an arbitrary
  * graph. Linear time here means O(m) where m is the cardinality of the edge set, even if the graph
  * contains isolated vertices. 1/2-approximation means that for any graph instance, the algorithm
  * computes a matching whose weight is at least half of the weight of a maximum weight matching. The
- * implementation accepts directed and undirected graphs which may contain self-loops and multiple
+ * implementation accepts undirected graphs which may contain self-loops and multiple
  * edges. There is no assumption on the edge weights, i.e. they can also be negative or zero.
  * 
  * <p>

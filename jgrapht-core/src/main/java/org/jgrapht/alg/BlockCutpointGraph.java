@@ -17,10 +17,14 @@
  */
 package org.jgrapht.alg;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphTests;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.MaskSubgraph;
+import org.jgrapht.graph.SimpleGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import java.util.*;
 
 /**
  * Definition of a <a href="http://mathworld.wolfram.com/Block.html">block of a graph</a> in
@@ -80,7 +84,7 @@ public class BlockCutpointGraph<V, E>
         super(DefaultEdge.class);
         this.graph = GraphTests.requireUndirected(graph, "Graph must be undirected");
 
-        this.dfsTree = new SimpleDirectedGraph<>(DefaultEdge.class);
+        this.dfsTree = new SimpleGraph<>(DefaultEdge.class);
         V s = graph.vertexSet().iterator().next();
         this.dfsTree.addVertex(s);
         dfsVisit(s, s);

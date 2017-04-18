@@ -17,23 +17,21 @@
  */
 package org.jgrapht.ext;
 
+import org.jgrapht.Graph;
+import org.jgrapht.WeightedGraph;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.AttributesImpl;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
-
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.Graph;
-import org.jgrapht.WeightedGraph;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * Exports a graph as GraphML.
@@ -506,8 +504,7 @@ public class GraphMLExporter<V, E>
         // <graph>
         AttributesImpl attr = new AttributesImpl();
         attr.addAttribute(
-            "", "", "edgedefault", "CDATA",
-            (g instanceof DirectedGraph<?, ?>) ? "directed" : "undirected");
+            "", "", "edgedefault", "CDATA", "undirected");
         handler.startElement("", "", "graph", attr);
     }
 

@@ -17,11 +17,11 @@
  */
 package org.jgrapht.alg.flow;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.MinimumSTCutAlgorithm;
+import org.jgrapht.graph.DefaultWeightedEdge;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.graph.*;
+import java.util.Set;
 
 /**
  * @author Joris Kinable
@@ -34,31 +34,6 @@ public class EdmondsKarpMinimumSTCutTest
         Graph<Integer, DefaultWeightedEdge> network)
     {
         return new EdmondsKarpMFImpl<>(network);
-    }
-
-    public void testRandomDirectedGraphs()
-    {
-        for (int test = 0; test < NR_RANDOM_TESTS; test++) {
-            Graph<Integer, DefaultWeightedEdge> network = generateDirectedGraph();
-            int source = 0;
-            int sink = network.vertexSet().size() - 1;
-
-            MinimumSTCutAlgorithm<Integer, DefaultWeightedEdge> ekSolver =
-                this.createSolver(network);
-            MinimumSTCutAlgorithm<Integer, DefaultWeightedEdge> prSolver =
-                new PushRelabelMFImpl<>(network);
-
-            double expectedCutWeight = prSolver.calculateMinCut(source, sink);
-
-            double cutWeight = ekSolver.calculateMinCut(source, sink);
-            Set<Integer> sourcePartition = ekSolver.getSourcePartition();
-            Set<Integer> sinkPartition = ekSolver.getSinkPartition();
-            Set<DefaultWeightedEdge> cutEdges = ekSolver.getCutEdges();
-
-            this.verifyDirected(
-                network, source, sink, expectedCutWeight, cutWeight, sourcePartition, sinkPartition,
-                cutEdges);
-        }
     }
 
     public void testRandomUndirectedGraphs()

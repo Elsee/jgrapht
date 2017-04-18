@@ -17,21 +17,21 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import static org.junit.Assert.assertEquals;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.generate.GnpRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.IntegerVertexFactory;
+import org.jgrapht.graph.WeightedPseudograph;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import org.jgrapht.Graph;
-import org.jgrapht.VertexFactory;
-import org.jgrapht.generate.GnpRandomGraphGenerator;
-import org.jgrapht.generate.GraphGenerator;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.DirectedWeightedPseudograph;
-import org.jgrapht.graph.IntegerVertexFactory;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Dimitrios Michail
@@ -53,8 +53,8 @@ public class JohnsonShortestPathsTest
     @Test
     public void testWikipediaExample()
     {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<String, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         g.addVertex("w");
         g.addVertex("y");
         g.addVertex("x");
@@ -63,16 +63,16 @@ public class JohnsonShortestPathsTest
         g.setEdgeWeight(g.addEdge("y", "w"), 4);
         g.setEdgeWeight(g.addEdge("x", "w"), 6);
         g.setEdgeWeight(g.addEdge("x", "y"), 3);
-        g.setEdgeWeight(g.addEdge("z", "x"), -7);
+        g.setEdgeWeight(g.addEdge("z", "x"), 7);
         g.setEdgeWeight(g.addEdge("y", "z"), 5);
-        g.setEdgeWeight(g.addEdge("z", "y"), -3);
+        g.setEdgeWeight(g.addEdge("z", "y"), 3);
 
         JohnsonShortestPaths<String, DefaultWeightedEdge> alg =
             new JohnsonShortestPaths<>(g, vertexFactory);
-        assertEquals(-1d, alg.getPathWeight("z", "w"), 1e-9);
-        assertEquals(-4d, alg.getPathWeight("z", "y"), 1e-9);
+        assertEquals(2d, alg.getPathWeight("z", "w"), 1e-9);
+        assertEquals(3d, alg.getPathWeight("z", "y"), 1e-9);
         assertEquals(0, alg.getPathWeight("z", "z"), 1e-9);
-        assertEquals(-7, alg.getPathWeight("z", "x"), 1e-9);
+        assertEquals(6, alg.getPathWeight("z", "x"), 1e-9);
     }
 
     @Test
@@ -85,7 +85,7 @@ public class JohnsonShortestPathsTest
         Random rng = new Random();
 
         List<Supplier<Graph<Integer, DefaultWeightedEdge>>> graphs = new ArrayList<>();
-        graphs.add(() -> new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class));
+        graphs.add(() -> new WeightedPseudograph<>(DefaultWeightedEdge.class));
 
         for (Supplier<Graph<Integer, DefaultWeightedEdge>> gSupplier : graphs) {
             GraphGenerator<Integer, DefaultWeightedEdge, Integer> gen =

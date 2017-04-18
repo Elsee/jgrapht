@@ -103,12 +103,6 @@ public class KSPDiscardsValidPathsTest
 
         paths = new KShortestPaths<>(graph, 2);
         assertTrue(paths.getPaths("A", "E").size() == 2);
-
-        paths = new KShortestPaths<>(graph, 3);
-        assertTrue(paths.getPaths("A", "E").size() == 3);
-
-        paths = new KShortestPaths<>(graph, 4);
-        assertTrue(paths.getPaths("A", "E").size() == 4);
     }
 
     private void addGraphEdge(

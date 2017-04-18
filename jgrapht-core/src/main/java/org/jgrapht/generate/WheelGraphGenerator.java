@@ -17,9 +17,12 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
 
-import org.jgrapht.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Map;
 
 /**
  * Generates a <a href="http://mathworld.wolfram.com/WheelGraph.html">wheel graph</a> of any size.
@@ -46,8 +49,7 @@ public class WheelGraphGenerator<V, E>
 
     /**
      * Creates a new WheelGraphGenerator object. This constructor is more suitable for undirected
-     * graphs, where spokes' direction is meaningless. In the directed case, spokes will be oriented
-     * from rim to hub.
+     * graphs, where spokes' direction is meaningless.
      *
      * @param size number of vertices to be generated.
      */
@@ -60,7 +62,7 @@ public class WheelGraphGenerator<V, E>
      * Construct a new WheelGraphGenerator.
      *
      * @param size number of vertices to be generated.
-     * @param inwardSpokes if <code>true</code> and graph is directed, spokes are oriented from rim
+     * @param inwardSpokes if <code>true</code> spokes are oriented from rim
      *        to hub; else from hub to rim.
      *
      * @throws IllegalArgumentException in case the number of vertices is negative

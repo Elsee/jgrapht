@@ -17,14 +17,15 @@
  */
 package org.jgrapht.io;
 
-import java.io.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.io.ExportException;
-import org.jgrapht.io.GmlExporter;
-
-import junit.framework.*;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author John V. Sichi
@@ -185,66 +186,6 @@ public class GmlExporterTest
             + "\t\ttarget 1" + NL
             + "\t]" + NL
             + "]" + NL;
-    
-    private static final String DIRECTED
-            = "Creator \"JGraphT GML Exporter\"" + NL
-            + "Version 1" + NL
-            + "graph" + NL
-            + "[" + NL            
-            + "\tlabel \"\"" + NL
-            + "\tdirected 1" + NL
-            + "\tnode" + NL
-            + "\t[" + NL            
-            + "\t\tid 1" + NL
-            + "\t]" + NL
-            + "\tnode" + NL
-            + "\t[" + NL            
-            + "\t\tid 2" + NL
-            + "\t]" + NL
-            + "\tnode" + NL
-            + "\t[" + NL            
-            + "\t\tid 3" + NL
-            + "\t]" + NL
-            + "\tnode" + NL
-            + "\t[" + NL            
-            + "\t\tid 4" + NL
-            + "\t]" + NL
-            + "\tnode" + NL
-            + "\t[" + NL            
-            + "\t\tid 5" + NL
-            + "\t]" + NL
-            + "\tedge" + NL
-            + "\t[" + NL            
-            + "\t\tid 1" + NL
-            + "\t\tsource 1" + NL
-            + "\t\ttarget 2" + NL
-            + "\t]" + NL
-            + "\tedge" + NL
-            + "\t[" + NL            
-            + "\t\tid 2" + NL
-            + "\t\tsource 3" + NL
-            + "\t\ttarget 1" + NL
-            + "\t]" + NL
-            + "\tedge" + NL
-            + "\t[" + NL            
-            + "\t\tid 3" + NL
-            + "\t\tsource 2" + NL
-            + "\t\ttarget 3" + NL
-            + "\t]" + NL
-            + "\tedge" + NL
-            + "\t[" + NL            
-            + "\t\tid 4" + NL
-            + "\t\tsource 3" + NL
-            + "\t\ttarget 4" + NL
-            + "\t]" + NL
-            + "\tedge" + NL
-            + "\t[" + NL            
-            + "\t\tid 5" + NL
-            + "\t\tsource 4" + NL
-            + "\t\ttarget 5" + NL
-            + "\t]" + NL
-            + "]" + NL;
-    // @formatter:on
 
     // ~ Methods
     // ----------------------------------------------------------------
@@ -282,28 +223,6 @@ public class GmlExporterTest
         exporter.exportGraph(g, os);
         String res = new String(os.toByteArray(), "UTF-8");
         assertEquals(UNDIRECTED, res);
-    }
-
-    public void testDirected()
-        throws UnsupportedEncodingException, ExportException
-    {
-        Graph<String, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        g.addVertex(V1);
-        g.addVertex(V2);
-        g.addVertex(V3);
-        g.addVertex(V4);
-        g.addVertex(V5);
-        g.addEdge(V1, V2);
-        g.addEdge(V3, V1);
-        g.addEdge(V2, V3);
-        g.addEdge(V3, V4);
-        g.addEdge(V4, V5);
-
-        GmlExporter<String, DefaultEdge> exporter = new GmlExporter<>();
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        exporter.exportGraph(g, os);
-        String res = new String(os.toByteArray(), "UTF-8");
-        assertEquals(DIRECTED, res);
     }
 
     public void testWeightedUndirected()

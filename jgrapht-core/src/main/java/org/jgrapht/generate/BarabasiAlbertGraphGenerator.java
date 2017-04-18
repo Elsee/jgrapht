@@ -17,16 +17,10 @@
  */
 package org.jgrapht.generate;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
-
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
+
+import java.util.*;
 
 /**
  * Barabási-Albert growth and preferential attachment graph generator.
@@ -42,9 +36,8 @@ import org.jgrapht.VertexFactory;
  * degree.
  * 
  * <p>
- * Note that the Barabàsi-Albert model is designed for undirected networks. Nevertheless, this
- * generator also works with directed networks where the probabilities are proportional to the sum
- * of incoming and outgoing degrees. For a more general discussion see the paper: M. E. J. Newman.
+ * Note that the Barabàsi-Albert model is designed for undirected networks. For a more general
+ * discussion see the paper: M. E. J. Newman.
  * The Structure and Function of Complex Networks. SIAM Rev., 45(2):167--256, 2003.
  * 
  * @author Dimitrios Michail

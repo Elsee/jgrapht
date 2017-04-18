@@ -17,13 +17,18 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.generate.GnmRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.Pseudograph;
+import org.jgrapht.graph.WeightedPseudograph;
 
-import org.jgrapht.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
-
-import junit.framework.*;
+import java.util.Random;
 
 /**
  * @author Dimitrios Michail
@@ -31,70 +36,6 @@ import junit.framework.*;
 public class BidirectionalDijkstraShortestPathTest
     extends TestCase
 {
-
-    public void testGraphDirected()
-    {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-
-        g.addVertex("1");
-        g.addVertex("2");
-        g.addVertex("3");
-        g.addVertex("4");
-        g.addVertex("5");
-        g.setEdgeWeight(g.addEdge("1", "2"), 3.0);
-        g.setEdgeWeight(g.addEdge("3", "1"), 3.0);
-        g.setEdgeWeight(g.addEdge("2", "4"), 3.0);
-        g.setEdgeWeight(g.addEdge("3", "5"), 5.0);
-        g.setEdgeWeight(g.addEdge("5", "4"), 5.0);
-
-        GraphPath<String, DefaultWeightedEdge> p =
-            new BidirectionalDijkstraShortestPath<>(g).getPath("3", "4");
-
-        assertEquals("3", p.getStartVertex());
-        assertEquals("4", p.getEndVertex());
-        assertEquals(3, p.getLength());
-        assertEquals(9.0, p.getWeight());
-        assertEquals("3", p.getVertexList().get(0));
-        assertEquals("1", p.getVertexList().get(1));
-        assertEquals("2", p.getVertexList().get(2));
-        assertEquals("4", p.getVertexList().get(3));
-        assertEquals(g.getEdge("3", "1"), p.getEdgeList().get(0));
-        assertEquals(g.getEdge("1", "2"), p.getEdgeList().get(1));
-        assertEquals(g.getEdge("2", "4"), p.getEdgeList().get(2));
-    }
-
-    public void testGraphDirectedRadius()
-    {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-
-        g.addVertex("1");
-        g.addVertex("2");
-        g.addVertex("3");
-        g.addVertex("4");
-        g.addVertex("5");
-        g.setEdgeWeight(g.addEdge("1", "2"), 3.0);
-        g.setEdgeWeight(g.addEdge("3", "1"), 3.0);
-        g.setEdgeWeight(g.addEdge("2", "4"), 3.0);
-        g.setEdgeWeight(g.addEdge("3", "5"), 5.0);
-        g.setEdgeWeight(g.addEdge("5", "4"), 5.0);
-
-        GraphPath<String, DefaultWeightedEdge> p =
-            new BidirectionalDijkstraShortestPath<>(g, 9.5).getPath("3", "4");
-
-        assertEquals("3", p.getStartVertex());
-        assertEquals("4", p.getEndVertex());
-        assertEquals(3, p.getLength());
-        assertEquals(9.0, p.getWeight());
-        assertEquals("3", p.getVertexList().get(0));
-        assertEquals("1", p.getVertexList().get(1));
-        assertEquals("2", p.getVertexList().get(2));
-        assertEquals("4", p.getVertexList().get(3));
-        assertEquals(g.getEdge("3", "1"), p.getEdgeList().get(0));
-        assertEquals(g.getEdge("1", "2"), p.getEdgeList().get(1));
-        assertEquals(g.getEdge("2", "4"), p.getEdgeList().get(2));
-    }
 
     public void testGraphUndirected()
     {
@@ -155,164 +96,12 @@ public class BidirectionalDijkstraShortestPathTest
         assertTrue(p.getEdgeList().isEmpty());
     }
 
-    public void testGraphDirectedNoPath()
-    {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-
-        g.addVertex("1");
-        g.addVertex("2");
-        g.addVertex("3");
-        g.addVertex("4");
-        g.addVertex("5");
-        g.setEdgeWeight(g.addEdge("1", "2"), 3.0);
-        g.setEdgeWeight(g.addEdge("3", "1"), 3.0);
-        g.setEdgeWeight(g.addEdge("4", "2"), 3.0);
-        g.setEdgeWeight(g.addEdge("3", "5"), 5.0);
-        g.setEdgeWeight(g.addEdge("4", "5"), 5.0);
-
-        assertNull(new BidirectionalDijkstraShortestPath<>(g).getPath("3", "4"));
-    }
-
-    public void testSingleEdgePath()
-    {
-        DirectedPseudograph<String, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-
-        g.addVertex("1");
-        g.addVertex("2");
-        g.addVertex("3");
-
-        g.addEdge("1", "2");
-        g.addEdge("1", "3");
-        g.addEdge("3", "1");
-
-        GraphPath<String, DefaultEdge> p =
-            new BidirectionalDijkstraShortestPath<>(g).getPath("1", "2");
-
-        assertEquals(p.getLength(), 1);
-        assertEquals("1", p.getStartVertex());
-        assertEquals("2", p.getEndVertex());
-        assertEquals("1", p.getVertexList().get(0));
-        assertEquals("2", p.getVertexList().get(1));
-        assertEquals(g.getEdge("1", "2"), p.getEdgeList().get(0));
-    }
-
-    public void testSimple1()
-    {
-        DirectedPseudograph<String, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-
-        g.addVertex("1");
-        g.addVertex("3");
-        g.addVertex("4");
-
-        g.addEdge("4", "3");
-        g.addEdge("3", "1");
-        g.addEdge("4", "1");
-
-        GraphPath<String, DefaultEdge> p =
-            new BidirectionalDijkstraShortestPath<>(g).getPath("4", "1");
-
-        assertEquals(1, p.getLength());
-        assertEquals(1.0, p.getWeight());
-        assertEquals("4", p.getStartVertex());
-        assertEquals("1", p.getEndVertex());
-        assertEquals("4", p.getVertexList().get(0));
-        assertEquals("1", p.getVertexList().get(1));
-        assertEquals(g.getEdge("4", "1"), p.getEdgeList().get(0));
-    }
-
-    public void testGraphAllPairsDirected()
-    {
-        DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-
-        for (int i = 0; i < 10; i++) {
-            g.addVertex(i);
-        }
-        for (int i = 0; i < 10; i++) {
-            for (int j = 0; j < 10; j++) {
-                if (i != j) {
-                    g.setEdgeWeight(g.addEdge(i, j), 1.0);
-                }
-            }
-        }
-        g.addVertex(10);
-        g.setEdgeWeight(g.addEdge(0, 10), 100.0);
-        for (int i = 11; i < 21; i++) {
-            g.addVertex(i);
-        }
-        for (int i = 11; i < 21; i++) {
-            for (int j = 11; j < 21; j++) {
-                if (i != j) {
-                    g.setEdgeWeight(g.addEdge(i, j), 1.0);
-                }
-            }
-        }
-        g.setEdgeWeight(g.addEdge(10, 11), 100.0);
-
-        for (int i = 0; i < 10; i++) {
-            for (int j = 11; j < 21; j++) {
-                GraphPath<Integer, DefaultWeightedEdge> p =
-                    new BidirectionalDijkstraShortestPath<>(g).getPath(i, j);
-                if (i == 0 && j == 11) {
-                    assertEquals(200.0, p.getWeight());
-                } else if (i == 0) {
-                    assertEquals(201.0, p.getWeight());
-                } else if (j == 11) {
-                    assertEquals(201.0, p.getWeight());
-                } else {
-                    assertEquals(202.0, p.getWeight());
-                }
-            }
-        }
-
-    }
-
-    public void testRandomGraphsDirected()
-    {
-
-        GraphGenerator<String, DefaultEdge, String> gen = new GnmRandomGraphGenerator<>(20, 100, 1);
-        DirectedPseudograph<String, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new VertexFactory<String>()
-        {
-            private int id = 1;
-
-            @Override
-            public String createVertex()
-            {
-                return Integer.toString(id++);
-            }
-        }, null);
-
-        for (String v : g.vertexSet()) {
-            for (String u : g.vertexSet()) {
-                GraphPath<String, DefaultEdge> p1 = new DijkstraShortestPath<>(g).getPath(v, u);
-
-                GraphPath<String, DefaultEdge> p2 =
-                    new BidirectionalDijkstraShortestPath<>(g).getPath(v, u);
-
-                if (p1 == null) {
-                    assertNull(p2);
-                } else if (p2 == null) {
-                    assertNull(p1);
-                } else {
-                    assertEquals(p1.getLength(), p2.getLength());
-                    assertEquals(p1.getWeight(), p2.getWeight(), 0.0001);
-                    assertEquals(p2.getWeight(), computePathWeight(g, p2), 0.0001);
-                    assertEquals(p1.getStartVertex(), p2.getStartVertex());
-                    assertEquals(p1.getEndVertex(), p2.getEndVertex());
-                }
-            }
-        }
-
-    }
-
     public void testRandomGraphsWeightedUndirected()
     {
         GraphGenerator<String, DefaultWeightedEdge, String> gen =
             new GnmRandomGraphGenerator<>(20, 100, 1);
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<String, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         gen.generateGraph(g, new VertexFactory<String>()
         {
             private int id = 1;
@@ -353,48 +142,9 @@ public class BidirectionalDijkstraShortestPathTest
 
     }
 
-    public void testRandomGraphsDirectedWithRadius()
-    {
-        GraphGenerator<String, DefaultEdge, String> gen = new GnmRandomGraphGenerator<>(20, 100, 1);
-        DirectedPseudograph<String, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new VertexFactory<String>()
-        {
-            private int id = 1;
-
-            @Override
-            public String createVertex()
-            {
-                return Integer.toString(id++);
-            }
-        }, null);
-
-        double radius = 2.5;
-
-        for (String v : g.vertexSet()) {
-            for (String u : g.vertexSet()) {
-                GraphPath<String, DefaultEdge> p1 =
-                    new DijkstraShortestPath<>(g, radius).getPath(v, u);
-
-                GraphPath<String, DefaultEdge> p2 =
-                    new BidirectionalDijkstraShortestPath<>(g, radius).getPath(v, u);
-
-                if (p1 == null || p2 == null) {
-                    assertNull(p1);
-                    assertNull(p2);
-                } else {
-                    assertEquals(p1.getLength(), p2.getLength());
-                    assertEquals(p1.getWeight(), p2.getWeight(), 0.0001);
-                    assertEquals(p2.getWeight(), computePathWeight(g, p2), 0.0001);
-                    assertEquals(p1.getStartVertex(), p2.getStartVertex());
-                    assertEquals(p1.getEndVertex(), p2.getEndVertex());
-                }
-            }
-        }
-    }
-
     public void testWrongParameters()
     {
-        DirectedPseudograph<String, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
 
         g.addVertex("1");
         g.addVertex("2");

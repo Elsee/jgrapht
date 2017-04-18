@@ -17,11 +17,15 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.WeightedPseudograph;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
-import org.jgrapht.graph.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * .
@@ -61,8 +65,8 @@ public class DijkstraShortestPathTest
 
     public void testShortestPathTree()
     {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<String, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         Graphs.addAllVertices(g, Arrays.asList(V1, V2, V3, V4, V5));
 
         DefaultWeightedEdge we12 = g.addEdge(V1, V2);
@@ -117,8 +121,8 @@ public class DijkstraShortestPathTest
 
     public void testGetPathWeight()
     {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<String, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         Graphs.addAllVertices(g, Arrays.asList(V1, V2, V3, V4, V5));
 
         DefaultWeightedEdge we12 = g.addEdge(V1, V2);
@@ -148,8 +152,8 @@ public class DijkstraShortestPathTest
 
     public void testNonNegativeWeights()
     {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<String, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         Graphs.addAllVertices(g, Arrays.asList(V1, V2));
 
         DefaultWeightedEdge we12 = g.addEdge(V1, V2);

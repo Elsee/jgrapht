@@ -17,10 +17,11 @@
  */
 package org.jgrapht;
 
-import java.util.*;
-import java.util.function.*;
-
-import org.jgrapht.graph.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * A collection of utilities to assist with graph manipulation.
@@ -154,37 +155,6 @@ public abstract class Graphs
         modified |= addAllEdges(destination, source, source.edgeSet());
 
         return modified;
-    }
-
-    /**
-     * Adds all the vertices and all the edges of the specified source digraph to the specified
-     * destination digraph, reversing all of the edges. If you want to do this as a linked view of
-     * the source graph (rather than by copying to a destination graph), use
-     * {@link EdgeReversedGraph} instead.
-     *
-     * <p>
-     * The behavior of this operation is undefined if any of the specified graphs is modified while
-     * operation is in progress.
-     *
-     * @param destination the graph to which vertices and edges are added
-     * @param source the graph used as source for vertices and edges to add
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     *
-     * @see EdgeReversedGraph
-     */
-    public static <V,
-        E> void addGraphReversed(Graph<? super V, ? super E> destination, Graph<V, E> source)
-    {
-        if (!source.getType().isDirected() || !destination.getType().isDirected()) {
-            throw new IllegalArgumentException("graph must be directed");
-        }
-
-        addAllVertices(destination, source.vertexSet());
-
-        for (E edge : source.edgeSet()) {
-            destination.addEdge(source.getEdgeTarget(edge), source.getEdgeSource(edge));
-        }
     }
 
     /**
@@ -325,28 +295,22 @@ public abstract class Graphs
     }
 
     /**
-     * Returns an undirected view of the specified graph. If the specified graph is directed,
-     * returns an undirected view of it. If the specified graph is already undirected, just returns
-     * it.
+     * Returns an undirected view of the specified graph.
      *
      * @param g the graph for which an undirected view is to be returned
      * @param <V> the graph vertex type
      * @param <E> the graph edge type
      *
-     * @return an undirected view of the specified graph, if it is directed, or or the specified
-     *         graph itself if it is already undirected.
+     * @return an undirected view of the specified graph.
      *
-     * @throws IllegalArgumentException if the graph is neither directed nor undirected
-     * @see AsUndirectedGraph
+     * @throws IllegalArgumentException if the graph is not undirected
      */
     public static <V, E> Graph<V, E> undirectedGraph(Graph<V, E> g)
     {
-        if (g.getType().isDirected()) {
-            return new AsUndirectedGraph<>(g);
-        } else if (g.getType().isUndirected()) {
+       if (g.getType().isUndirected()) {
             return g;
         } else {
-            throw new IllegalArgumentException("graph must be either directed or undirected");
+            throw new IllegalArgumentException("graph must be either undirected");
         }
     }
 
@@ -475,8 +439,7 @@ public abstract class Graphs
     }
 
     /**
-     * Add edges from one source vertex to multiple target vertices. Whether duplicates are created
-     * depends on the underlying {@link DirectedGraph} implementation.
+     * Add edges from one source vertex to multiple target vertices.
      *
      * @param graph graph to be mutated
      * @param source source vertex of the new edges

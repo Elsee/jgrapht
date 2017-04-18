@@ -17,15 +17,17 @@
  */
 package org.jgrapht.alg.shortestpath;
 
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.alg.util.Pair;
+import org.jgrapht.util.FibonacciHeap;
+import org.jgrapht.util.FibonacciHeapNode;
+
 import java.util.*;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.util.*;
-
 /**
- * A light-weight version of the closest-first iterator for a directed or undirected graphs. For
+ * A light-weight version of the closest-first iterator for undirected graphs. For
  * this iterator to work correctly the graph must not be modified during iteration. Currently there
  * are no means to ensure that, nor to fail-fast. The results of such modifications are undefined.
  * 

@@ -17,12 +17,17 @@
  */
 package org.jgrapht.graph;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.*;
-
 import org.jgrapht.*;
-import org.jgrapht.event.*;
+import org.jgrapht.event.GraphEdgeChangeEvent;
+import org.jgrapht.event.GraphListener;
+import org.jgrapht.event.GraphVertexChangeEvent;
+
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A subgraph is a graph that has a subset of vertices and a subset of edges with respect to some
@@ -119,7 +124,7 @@ public class AsSubgraph<V, E>
     {
         super();
 
-        this.base = GraphTests.requireDirectedOrUndirected(base);
+        this.base = GraphTests.requireUndirected(base);
         this.baseType = base.getType();
         this.isInduced = edgeSubset == null;
 

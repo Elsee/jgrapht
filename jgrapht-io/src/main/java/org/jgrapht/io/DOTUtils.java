@@ -28,12 +28,8 @@ class DOTUtils
 {
     /** Keyword for representing strict graphs. */
     static final String DONT_ALLOW_MULTIPLE_EDGES_KEYWORD = "strict";
-    /** Keyword for directed graphs. */
-    static final String DIRECTED_GRAPH_KEYWORD = "digraph";
     /** Keyword for undirected graphs. */
     static final String UNDIRECTED_GRAPH_KEYWORD = "graph";
-    /** Edge operation for directed graphs. */
-    static final String DIRECTED_GRAPH_EDGEOP = "->";
     /** Edge operation for undirected graphs. */
     static final String UNDIRECTED_GRAPH_EDGEOP = "--";
 

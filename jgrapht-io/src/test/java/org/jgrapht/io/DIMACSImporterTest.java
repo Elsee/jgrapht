@@ -41,9 +41,9 @@ public class DIMACSImporterTest
     {
         Graph<Integer, E> g;
         if (weighted) {
-            g = new DirectedWeightedPseudograph<Integer, E>(edgeClass);
+            g = new WeightedPseudograph<Integer, E>(edgeClass);
         } else {
-            g = new DirectedPseudograph<Integer, E>(edgeClass);
+            g = new Pseudograph<Integer, E>(edgeClass);
         }
 
         DIMACSImporter<Integer, E> importer = new DIMACSImporter<>(

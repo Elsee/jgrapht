@@ -17,18 +17,17 @@
  */
 package org.jgrapht.io;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
+import org.junit.Test;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.io.DIMACSExporter;
-import org.jgrapht.io.DIMACSFormat;
-import org.jgrapht.io.ExportException;
-import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
  * Tests
@@ -70,40 +69,6 @@ public class DIMACSExporterTest
         "a 1 2 1.0" + NL +
         "a 3 1 1.0" + NL;
 
-    private static final String DIRECTED = 
-        "c" + NL +
-        "c SOURCE: Generated using the JGraphT library" + NL +
-        "c" + NL +
-        "p sp 5 5" + NL +
-        "a 1 2" + NL +
-        "a 3 1" + NL +
-        "a 2 3" + NL +
-        "a 3 4" + NL +
-        "a 4 5" + NL;
-    
-    private static final String DIRECTED_MAX_CLIQUE = 
-        "c" + NL +
-        "c SOURCE: Generated using the JGraphT library" + NL +
-        "c" + NL +
-        "p edge 5 5" + NL +
-        "e 1 2" + NL +
-        "e 3 1" + NL +
-        "e 2 3" + NL +
-        "e 3 4" + NL +
-        "e 4 5" + NL;
-    
-    private static final String DIRECTED_COLORING = 
-        "c" + NL +
-        "c SOURCE: Generated using the JGraphT library" + NL +
-        "c" + NL +
-        "p col 5 5" + NL +
-        "e 1 2" + NL +
-        "e 3 1" + NL +
-        "e 2 3" + NL +
-        "e 3 4" + NL +
-        "e 4 5" + NL;    
-    // @formatter:on
-
     @Test
     public void testUndirected()
         throws UnsupportedEncodingException, ExportException
@@ -141,30 +106,6 @@ public class DIMACSExporterTest
         exporter.exportGraph(g, os);
         String res = new String(os.toByteArray(), "UTF-8");
         assertEquals(UNDIRECTED_AS_UNWEIGHTED, res);
-    }
-
-    @Test
-    public void testDirected()
-        throws UnsupportedEncodingException, ExportException
-    {
-        Graph<String, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        g.addVertex(V1);
-        g.addVertex(V2);
-        g.addVertex(V3);
-        g.addVertex(V4);
-        g.addVertex(V5);
-        g.addEdge(V1, V2);
-        g.addEdge(V3, V1);
-        g.addEdge(V2, V3);
-        g.addEdge(V3, V4);
-        g.addEdge(V4, V5);
-
-        DIMACSExporter<String, DefaultEdge> exporter = new DIMACSExporter<>();
-        exporter.setFormat(DIMACSFormat.SHORTEST_PATH);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        exporter.exportGraph(g, os);
-        String res = new String(os.toByteArray(), "UTF-8");
-        assertEquals(DIRECTED, res);
     }
 
     @Test
@@ -206,54 +147,6 @@ public class DIMACSExporterTest
     {
         DIMACSExporter<String, DefaultWeightedEdge> exporter = new DIMACSExporter<>();
         assertEquals(DIMACSFormat.MAX_CLIQUE, exporter.getFormat());
-    }
-
-    @Test
-    public void testDirectedColoring()
-        throws UnsupportedEncodingException, ExportException
-    {
-        Graph<String, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        g.addVertex(V1);
-        g.addVertex(V2);
-        g.addVertex(V3);
-        g.addVertex(V4);
-        g.addVertex(V5);
-        g.addEdge(V1, V2);
-        g.addEdge(V3, V1);
-        g.addEdge(V2, V3);
-        g.addEdge(V3, V4);
-        g.addEdge(V4, V5);
-
-        DIMACSExporter<String, DefaultEdge> exporter = new DIMACSExporter<>();
-        exporter.setFormat(DIMACSFormat.COLORING);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        exporter.exportGraph(g, os);
-        String res = new String(os.toByteArray(), "UTF-8");
-        assertEquals(DIRECTED_COLORING, res);
-    }
-
-    @Test
-    public void testDirectedMaxClique()
-        throws UnsupportedEncodingException, ExportException
-    {
-        Graph<String, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        g.addVertex(V1);
-        g.addVertex(V2);
-        g.addVertex(V3);
-        g.addVertex(V4);
-        g.addVertex(V5);
-        g.addEdge(V1, V2);
-        g.addEdge(V3, V1);
-        g.addEdge(V2, V3);
-        g.addEdge(V3, V4);
-        g.addEdge(V4, V5);
-
-        DIMACSExporter<String, DefaultEdge> exporter = new DIMACSExporter<>();
-        exporter.setFormat(DIMACSFormat.MAX_CLIQUE);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        exporter.exportGraph(g, os);
-        String res = new String(os.toByteArray(), "UTF-8");
-        assertEquals(DIRECTED_MAX_CLIQUE, res);
     }
 
 }

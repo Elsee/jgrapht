@@ -17,13 +17,13 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
 
-import org.jgrapht.*;
+import java.util.Map;
 
 /**
- * Generates a linear graph of any size. For a directed graph, the edges are oriented from
- * START_VERTEX to END_VERTEX.
+ * Generates a linear graph of any size.
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type

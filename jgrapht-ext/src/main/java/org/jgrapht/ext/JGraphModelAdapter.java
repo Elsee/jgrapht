@@ -198,12 +198,6 @@ public class JGraphModelAdapter<V, E>
     {
         AttributeMap map = new AttributeMap();
 
-        if (jGraphTGraph.getType().isDirected()) {
-            GraphConstants.setLineEnd(map, GraphConstants.ARROW_TECHNICAL);
-            GraphConstants.setEndFill(map, true);
-            GraphConstants.setEndSize(map, 10);
-        }
-
         GraphConstants.setForeground(map, Color.decode("#25507C"));
         GraphConstants.setFont(map, GraphConstants.DEFAULTFONT.deriveFont(Font.BOLD, 12));
         GraphConstants.setLineColor(map, Color.decode("#7AA1E6"));

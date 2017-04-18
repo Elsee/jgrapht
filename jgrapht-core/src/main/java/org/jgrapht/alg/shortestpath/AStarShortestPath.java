@@ -17,19 +17,22 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
+import org.jgrapht.alg.util.ToleranceDoubleComparator;
+import org.jgrapht.graph.GraphWalk;
+import org.jgrapht.util.FibonacciHeap;
+import org.jgrapht.util.FibonacciHeapNode;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.util.*;
+import java.util.*;
 
 /**
  * A* shortest path.
  * 
  * An implementation of <a href="http://en.wikipedia.org/wiki/A*_search_algorithm">A* shortest path
- * algorithm</a>. This class works for directed and undirected graphs, as well as multi-graphs and
+ * algorithm</a>. This class works for undirected graphs, as well as multi-graphs and
  * mixed-graphs. The graph can also change between invocations of the
  * {@link #getPath(Object, Object)} method; no new instance of this class has to be created. The
  * heuristic is implemented using a FibonacciHeap data structure to maintain the set of open nodes.

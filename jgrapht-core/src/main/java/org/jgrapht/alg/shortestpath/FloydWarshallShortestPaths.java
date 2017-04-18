@@ -17,11 +17,13 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.GraphWalk;
+import org.jgrapht.util.TypeUtil;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.util.*;
+import java.util.*;
 
 /**
  * The Floyd-Warshall algorithm.
@@ -267,7 +269,7 @@ public class FloydWarshallShortestPaths<V, E>
                     }
                 }
             }
-        } else { // This works for both Directed and Mixed graphs! Iterating over
+        } else { // This works for Mixed graphs! Iterating over
                  // the arcs and querying source/sink does not suffice for graphs
                  // which contain both edges and arcs
             for (V v1 : graph.vertexSet()) {

@@ -37,7 +37,7 @@ public class GnpRandomBipartiteGraphGeneratorTest
     {
         GraphGenerator<Integer, DefaultEdge, Integer> gen =
             new GnpRandomBipartiteGraphGenerator<>(0, 0, 0.5);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
         gen.generateGraph(g, new IntegerVertexFactory(1), null);
         assertEquals(0, g.vertexSet().size());
         assertEquals(0, g.edgeSet().size());
@@ -68,51 +68,6 @@ public class GnpRandomBipartiteGraphGeneratorTest
             fail("Bad parameter");
         } catch (IllegalArgumentException e) {
         }
-    }
-
-    public void testDirectedGraphGnp1()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnpRandomBipartiteGraphGenerator<>(4, 4, 0.5, SEED);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(1), null);
-
-        int[][] edges = { { 5, 1 }, { 1, 6 }, { 6, 1 }, { 1, 7 }, { 1, 8 }, { 2, 5 }, { 6, 2 },
-            { 7, 2 }, { 2, 8 }, { 5, 3 }, { 3, 6 }, { 7, 3 }, { 3, 8 }, { 4, 5 }, { 5, 4 },
-            { 4, 6 }, { 6, 4 }, { 4, 7 }, { 4, 8 }, { 8, 4 } };
-
-        assertEquals(4 + 4, g.vertexSet().size());
-        for (int[] e : edges) {
-            assertTrue(g.containsEdge(e[0], e[1]));
-        }
-        assertEquals(edges.length, g.edgeSet().size());
-    }
-
-    public void testDirectedGraphGnp2()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnpRandomBipartiteGraphGenerator<>(4, 4, 1.0, SEED);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(1), null);
-
-        assertEquals(4 + 4, g.vertexSet().size());
-        assertEquals(32, g.edgeSet().size());
-    }
-
-    public void testDirectedGraphGnp3()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnpRandomBipartiteGraphGenerator<>(4, 4, 0.1, SEED);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(1), null);
-
-        int[][] edges = { { 5, 1 }, { 7, 3 }, { 3, 8 }, { 8, 4 } };
-
-        assertEquals(4 + 4, g.vertexSet().size());
-        for (int[] e : edges) {
-            assertTrue(g.containsEdge(e[0], e[1]));
-        }
-        assertEquals(edges.length, g.edgeSet().size());
     }
 
     public void testUndirectedGraphGnp1()

@@ -17,14 +17,21 @@
  */
 package org.jgrapht.demo;
 
-import java.io.*;
-import java.util.*;
-
-import org.jgrapht.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.generate.CompleteGraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.WeightedPseudograph;
 import org.jgrapht.io.*;
-import org.jgrapht.io.GraphMLExporter.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
+import org.jgrapht.io.GraphMLExporter.AttributeCategory;
+import org.jgrapht.io.GraphMLExporter.AttributeType;
+
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * This class demonstrates exporting and importing a graph with custom vertex and edge attributes in
@@ -260,8 +267,8 @@ public final class GraphMLDemo
          * 
          * Vertices have random colors and edges have random edge weights.
          */
-        DirectedWeightedPseudograph<CustomVertex, DefaultWeightedEdge> graph1 =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<CustomVertex, DefaultWeightedEdge> graph1 =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         CompleteGraphGenerator<CustomVertex, DefaultWeightedEdge> completeGenerator =
             new CompleteGraphGenerator<>(SIZE);
         VertexFactory<CustomVertex> vFactory = new VertexFactory<CustomVertex>()
@@ -304,7 +311,7 @@ public final class GraphMLDemo
             // import it back
             System.out.println("-- Importing graph back from GraphML");
             Graph<CustomVertex, DefaultWeightedEdge> graph2 =
-                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+                new WeightedPseudograph<>(DefaultWeightedEdge.class);
             GraphImporter<CustomVertex, DefaultWeightedEdge> importer = createImporter();
             importer.importGraph(graph2, new StringReader(graph1AsGraphML));
 

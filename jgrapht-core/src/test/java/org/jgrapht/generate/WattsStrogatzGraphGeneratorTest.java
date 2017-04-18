@@ -17,17 +17,16 @@
  */
 package org.jgrapht.generate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import java.util.Random;
-
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.IntegerVertexFactory;
-import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
 import org.junit.Test;
+
+import java.util.Random;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Dimitrios Michail
@@ -161,20 +160,6 @@ public class WattsStrogatzGraphGeneratorTest
 
         assertEquals(12, g.vertexSet().size());
         assertEquals(36, g.edgeSet().size());
-    }
-
-    @Test
-    public void test4RegularNoRewiringDirected()
-    {
-        final long seed = 5;
-
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new WattsStrogatzGraphGenerator<>(6, 4, 0.0, seed);
-        Graph<Integer, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(), null);
-
-        assertEquals(6, g.vertexSet().size());
-        assertEquals(12, g.edgeSet().size());
     }
 
 }

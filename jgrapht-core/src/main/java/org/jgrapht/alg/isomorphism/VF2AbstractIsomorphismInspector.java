@@ -17,9 +17,12 @@
  */
 package org.jgrapht.alg.isomorphism;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphMapping;
+import org.jgrapht.GraphType;
 
-import org.jgrapht.*;
+import java.util.Comparator;
+import java.util.Iterator;
 
 /**
  * Base implementation of the VF2 algorithm using its feature of detecting
@@ -65,17 +68,6 @@ public abstract class VF2AbstractIsomorphismInspector<V, E>
                 "graphs with multiple " + "edges are not supported");
         }
 
-        if (type1.isMixed() || type2.isMixed()) { 
-            throw new UnsupportedOperationException(
-                "mixed graphs not supported");
-        }
-        
-        if (type1.isUndirected() && type2.isDirected() || 
-            type1.isDirected() && type2.isUndirected()) { 
-            throw new IllegalArgumentException(
-                "can not match directed with " + "undirected graphs");
-        }
-            
         this.graph1 = graph1;
         this.graph2 = graph2;
         this.vertexComparator = vertexComparator;

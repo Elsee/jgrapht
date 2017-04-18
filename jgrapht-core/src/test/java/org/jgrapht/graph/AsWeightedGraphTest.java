@@ -17,12 +17,14 @@
  */
 package org.jgrapht.graph;
 
-import java.util.*;
+import org.jgrapht.EnhancedTestCase;
+import org.jgrapht.Graph;
 
-import org.jgrapht.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * A unit test for the AsWeightedGraph view and the AsDirectedWeightedGraph view.
+ * A unit test for the AsWeightedGraph view.
  *
  * @author Lucas J. Scharenbroich
  * @author Joris Kinable
@@ -34,9 +36,6 @@ public class AsWeightedGraphTest
 
     public Graph<String, DefaultWeightedEdge> weightedGraph;
     public Graph<String, DefaultEdge> unweightedGraph;
-
-    public SimpleDirectedWeightedGraph<String, DefaultWeightedEdge> directedWeightedGraph;
-    public Graph<String, DefaultEdge> directedUnweightedGraph;
 
     public SimpleWeightedGraph<String, DefaultWeightedEdge> undirectedWeightedGraph;
     public Graph<String, DefaultEdge> undirectedUnweightedGraph;
@@ -61,14 +60,6 @@ public class AsWeightedGraphTest
         // Create another undirected graph without weights
         undirectedUnweightedGraph = new SimpleGraph<>(DefaultEdge.class);
         this.createdUnweightedGraph(undirectedUnweightedGraph);
-
-        // Create a weighted, directed graph
-        directedWeightedGraph = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-        this.createdWeightedGraph(directedWeightedGraph);
-
-        // Create a directed graph without weights
-        directedUnweightedGraph = new SimpleDirectedGraph<>(DefaultEdge.class);
-        this.createdUnweightedGraph(directedUnweightedGraph);
     }
 
     private void createdWeightedGraph(Graph<String, DefaultWeightedEdge> graph)
@@ -99,7 +90,6 @@ public class AsWeightedGraphTest
     {
         this.testUnweightedGraph(unweightedGraph);
         this.testUnweightedGraph(undirectedUnweightedGraph);
-        this.testUnweightedGraph(directedUnweightedGraph);
     }
 
     public void testUnweightedGraph(Graph<String, DefaultEdge> graph)
@@ -131,7 +121,6 @@ public class AsWeightedGraphTest
     {
         this.testWeightedGraph(weightedGraph);
         this.testWeightedGraph(undirectedWeightedGraph);
-        this.testWeightedGraph(directedWeightedGraph);
     }
 
     public void testWeightedGraph(Graph<String, DefaultWeightedEdge> graph)

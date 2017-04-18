@@ -17,12 +17,12 @@
  */
 package org.jgrapht.alg;
 
-import java.util.*;
-
+import junit.framework.TestCase;
 import org.jgrapht.ListenableGraph;
-import org.jgrapht.graph.*;
+import org.jgrapht.graph.DefaultListenableGraph;
+import org.jgrapht.graph.SimpleGraph;
 
-import junit.framework.*;
+import java.util.Set;
 
 /**
  * .
@@ -82,47 +82,6 @@ public class NeighborIndexTest
         g.removeVertex(V2);
 
         assertEquals(0, neighbors1.size());
-    }
-
-    public void testDirectedNeighborSet()
-    {
-        ListenableGraph<String, Object> g =
-            new DefaultListenableGraph<>(new DefaultDirectedGraph<>(Object.class));
-        g.addVertex(V1);
-        g.addVertex(V2);
-
-        g.addEdge(V1, V2);
-
-        DirectedNeighborIndex<String, Object> index = new DirectedNeighborIndex<>(g);
-        g.addGraphListener(index);
-
-        Set<String> p = index.predecessorsOf(V1);
-        Set<String> s = index.successorsOf(V1);
-
-        assertEquals(0, p.size());
-        assertEquals(1, s.size());
-        assertEquals(true, s.contains(V2));
-
-        g.addVertex(V3);
-        g.addEdge(V3, V1);
-
-        Set<String> q = index.successorsOf(V3);
-
-        assertEquals(1, p.size());
-        assertEquals(1, s.size());
-        assertEquals(true, p.contains(V3));
-
-        assertEquals(1, q.size());
-        assertEquals(true, q.contains(V1));
-
-        g.removeEdge(V3, V1);
-
-        assertEquals(0, q.size());
-        assertEquals(0, p.size());
-
-        g.removeVertex(V2);
-
-        assertEquals(0, s.size());
     }
 }
 

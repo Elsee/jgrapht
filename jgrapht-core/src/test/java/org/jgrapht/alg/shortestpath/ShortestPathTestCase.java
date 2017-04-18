@@ -17,12 +17,14 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-
-import junit.framework.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * .
@@ -77,22 +79,15 @@ public abstract class ShortestPathTestCase
 
     protected Graph<String, DefaultWeightedEdge> create()
     {
-        return createWithBias(false);
+        return createWithBias();
     }
 
-    protected Graph<String, DefaultWeightedEdge> createWithBias(boolean negate)
+    protected Graph<String, DefaultWeightedEdge> createWithBias()
     {
         Graph<String, DefaultWeightedEdge> g;
         double bias = 1;
-        if (negate) {
-            // negative-weight edges are being tested, so only a directed graph
-            // makes sense
-            g = new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-            bias = -1;
-        } else {
-            // by default, use an undirected graph
-            g = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
-        }
+        g = new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
+
 
         g.addVertex(V1);
         g.addVertex(V2);

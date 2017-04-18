@@ -17,22 +17,19 @@
  */
 package org.jgrapht.perf.graph;
 
-import java.util.*;
-import java.util.concurrent.*;
-
-import org.jgrapht.alg.*;
-import org.jgrapht.alg.flow.*;
-import org.jgrapht.alg.interfaces.*;
+import junit.framework.TestCase;
+import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.graph.specifics.*;
-import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.infra.*;
-import org.openjdk.jmh.runner.*;
-import org.openjdk.jmh.runner.options.*;
+import org.jgrapht.generate.GnmRandomGraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.infra.Blackhole;
 
-import junit.framework.*;
+import java.util.Random;
 
 /**
  * Benchmark class to compare different graph implementations. The benchmark creates a graph, runs
@@ -58,14 +55,14 @@ public class GraphPerformanceTest
 
         private Blackhole blackhole;
         protected GnmRandomGraphGenerator<Integer, DefaultWeightedEdge> rgg;
-        private SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph;
+        private SimpleWeightedGraph<Integer, DefaultWeightedEdge> graph;
 
         /**
          * Creates a random graph using the Random Graph Generator
          * 
          * @return random graph
          */
-        abstract SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> constructGraph();
+        abstract SimpleWeightedGraph<Integer, DefaultWeightedEdge> constructGraph();
 
         @Setup
         public void setup()
@@ -113,16 +110,13 @@ public class GraphPerformanceTest
                 double maxFlow = this.calculateMaxFlow(graph, source, sink);
                 blackhole.consume(maxFlow);
 
-                boolean isStronglyConnected = this.isStronglyConnected(graph);
-                blackhole.consume(isStronglyConnected);
-
                 // Destroy some random edges in the graph
                 destroyRandomEdges(graph);
             }
         }
 
         private double calculateShorestPath(
-            SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph, Integer source,
+            SimpleWeightedGraph<Integer, DefaultWeightedEdge> graph, Integer source,
             Integer sink)
         {
             DijkstraShortestPath<Integer, DefaultWeightedEdge> shortestPathAlg =
@@ -131,7 +125,7 @@ public class GraphPerformanceTest
         }
 
         private double calculateMaxFlow(
-            SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph, Integer source,
+            SimpleWeightedGraph<Integer, DefaultWeightedEdge> graph, Integer source,
             Integer sink)
         {
             EdmondsKarpMFImpl<Integer, DefaultWeightedEdge> maximumFlowAlg =
@@ -139,16 +133,8 @@ public class GraphPerformanceTest
             return maximumFlowAlg.getMaximumFlow(source, sink).getValue();
         }
 
-        private boolean isStronglyConnected(
-            SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph)
-        {
-            StrongConnectivityAlgorithm<Integer, DefaultWeightedEdge> strongConnectivityAlg =
-                new GabowStrongConnectivityInspector<>(graph);
-            return strongConnectivityAlg.isStronglyConnected();
-        }
-
         private void destroyRandomEdges(
-            SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph)
+            SimpleWeightedGraph<Integer, DefaultWeightedEdge> graph)
         {
             int nrVertices = graph.vertexSet().size();
             Random rand = new Random(SEED);
@@ -161,76 +147,5 @@ public class GraphPerformanceTest
 
     }
 
-    /**
-     * Graph class which relies on the (legacy) DirectedSpecifics implementation. This class is
-     * optimized for low memory usage, but performs edge retrieval operations fairly slow.
-     */
-    public static class MemoryEfficientDirectedGraphBenchmark
-        extends DirectedGraphBenchmarkBase
-    {
-        @Override
-        SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> constructGraph()
-        {
-            SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph =
-                new MemoryEfficientDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-            rgg.generateGraph(graph, new IntegerVertexFactory(1), null);
-            return graph;
-        }
-    }
 
-    /**
-     * Graph class which relies on the FastLookupDirectedSpecifics. This class is optimized to
-     * perform quick edge retrievals.
-     */
-    public static class FastLookupDirectedGraphBenchmark
-        extends DirectedGraphBenchmarkBase
-    {
-        @Override
-        SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> constructGraph()
-        {
-            SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> graph =
-                new SimpleDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-            rgg.generateGraph(graph, new IntegerVertexFactory(1), null);
-            return graph;
-        }
-    }
-
-    public void testRandomGraphBenchmark()
-        throws RunnerException
-    {
-        Options opt = new OptionsBuilder()
-            .include(".*" + MemoryEfficientDirectedGraphBenchmark.class.getSimpleName() + ".*")
-            .include(".*" + FastLookupDirectedGraphBenchmark.class.getSimpleName() + ".*")
-
-            .mode(Mode.AverageTime).timeUnit(TimeUnit.MILLISECONDS)
-            // .warmupTime(TimeValue.seconds(1))
-            .warmupIterations(3)
-            // .measurementTime(TimeValue.seconds(1))
-            .measurementIterations(5).forks(1).shouldFailOnError(true).shouldDoGC(true).build();
-
-        new Runner(opt).run();
-    }
-
-    /**
-     * Creates an memory efficient graph implementation.
-     * 
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     */
-    public static class MemoryEfficientDirectedWeightedGraph<V, E>
-        extends SimpleDirectedWeightedGraph<V, E>
-    {
-        private static final long serialVersionUID = -1826738982402033648L;
-
-        public MemoryEfficientDirectedWeightedGraph(Class<? extends E> edgeClass)
-        {
-            super(edgeClass);
-        }
-
-        @Override
-        protected Specifics<V, E> createSpecifics()
-        {
-            return new DirectedSpecifics<>(this);
-        }
-    }
 }

@@ -22,7 +22,7 @@ package org.jgrapht;
  *
  * <p>
  * See <a href="http://mathworld.wolfram.com/Graph.html">
- * http://mathworld.wolfram.com/Graph.html</a> for more on undirected and on directed graphs.
+ * http://mathworld.wolfram.com/Graph.html</a> for more on undirected graphs.
  * </p>
  *
  * @param <V> the graph vertex type

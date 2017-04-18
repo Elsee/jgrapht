@@ -17,26 +17,21 @@
  */
 package org.jgrapht.alg.tour;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
+import org.jgrapht.generate.CompleteGraphGenerator;
+import org.jgrapht.graph.*;
+import org.junit.Test;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.Graphs;
-import org.jgrapht.alg.spanning.KruskalMinimumSpanningTree;
-import org.jgrapht.generate.CompleteGraphGenerator;
-import org.jgrapht.graph.ClassBasedVertexFactory;
-import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DefaultWeightedEdge;
-import org.jgrapht.graph.SimpleDirectedGraph;
-import org.jgrapht.graph.SimpleGraph;
-import org.jgrapht.graph.SimpleWeightedGraph;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dimitrios Michail
@@ -127,15 +122,6 @@ public class TwoApproxMetricTSPTest
         double mstWeight = new KruskalMinimumSpanningTree<>(g).getSpanningTree().getWeight();
         double tourWeight = tour.getWeight();
         assertTrue(2 * mstWeight >= tourWeight);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testInvalidInstanceDirected()
-    {
-        Graph<String, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        g.addVertex("A");
-
-        new TwoApproxMetricTSP<String, DefaultEdge>().getTour(g);
     }
 
     @Test(expected = IllegalArgumentException.class)

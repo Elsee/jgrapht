@@ -244,10 +244,6 @@ public interface Graph<V, E>
      * <p>
      * A degree of a vertex in an undirected graph is the number of edges touching that vertex.
      * Edges with same source and target vertices (self-loops) are counted twice.
-     * 
-     * <p>
-     * In directed graphs this method returns the sum of the "in degree" and the "out degree".
-     *
      * @param vertex vertex whose degree is to be calculated.
      * @return the degree of the specified vertex.
      */
@@ -267,12 +263,7 @@ public interface Graph<V, E>
 
     /**
      * Returns the "in degree" of the specified vertex.
-     * 
-     * <p>
-     * The "in degree" of a vertex in a directed graph is the number of inward directed edges from
-     * that vertex. See <a href="http://mathworld.wolfram.com/Indegree.html">
-     * http://mathworld.wolfram.com/Indegree.html</a>.
-     * 
+     *
      * <p>
      * In the case of undirected graphs this method returns the number of edges touching the vertex.
      * Edges with same source and target vertices (self-loops) are counted twice.
@@ -296,12 +287,7 @@ public interface Graph<V, E>
 
     /**
      * Returns the "out degree" of the specified vertex.
-     * 
-     * <p>
-     * The "out degree" of a vertex in a directed graph is the number of outward directed edges from
-     * that vertex. See <a href="http://mathworld.wolfram.com/Outdegree.html">
-     * http://mathworld.wolfram.com/Outdegree.html</a>.
-     * 
+     *
      * <p>
      * In the case of undirected graphs this method returns the number of edges touching the vertex.
      * Edges with same source and target vertices (self-loops) are counted twice.
@@ -458,7 +444,7 @@ public interface Graph<V, E>
 
     /**
      * Get the graph type. The graph type can be used to query for additional metadata such as
-     * whether the graph supports directed or undirected edges, self-loops, parallel-edges, weights,
+     * whether the graph supports undirected edges, self-loops, parallel-edges, weights,
      * etc.
      * 
      * @return the graph type

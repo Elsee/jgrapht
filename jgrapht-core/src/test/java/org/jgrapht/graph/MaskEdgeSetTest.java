@@ -17,9 +17,10 @@
  */
 package org.jgrapht.graph;
 
-import java.util.*;
+import org.jgrapht.EnhancedTestCase;
+import org.jgrapht.Graph;
 
-import org.jgrapht.*;
+import java.util.Iterator;
 
 /**
  * Unit tests for MaskEdgeSet.
@@ -33,29 +34,26 @@ public class MaskEdgeSetTest
     private String v2 = "v2";
     private String v3 = "v3";
     private String v4 = "v4";
-    private DefaultEdge e1, e2, e3, loop1, loop2;
+    private DefaultEdge e1, e2, e3;
 
     private MaskEdgeSet<String, DefaultEdge> testMaskedEdgeSet;
 
     @Override
     protected void setUp()
     {
-        Graph<String, DefaultEdge> directed = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> undirected = new SimpleGraph<>(DefaultEdge.class);
 
-        directed.addVertex(v1);
-        directed.addVertex(v2);
-        directed.addVertex(v3);
-        directed.addVertex(v4);
+        undirected.addVertex(v1);
+        undirected.addVertex(v2);
+        undirected.addVertex(v3);
+        undirected.addVertex(v4);
 
-        e1 = directed.addEdge(v1, v2);
-        e2 = directed.addEdge(v2, v3);
-        e3 = directed.addEdge(v2, v4);
-
-        loop1 = directed.addEdge(v1, v1);
-        loop2 = directed.addEdge(v4, v4);
+        e1 = undirected.addEdge(v1, v2);
+        e2 = undirected.addEdge(v2, v3);
+        e3 = undirected.addEdge(v2, v4);
 
         testMaskedEdgeSet =
-            new MaskEdgeSet<>(directed, directed.edgeSet(), v -> v == v1, e -> e == e2);
+            new MaskEdgeSet<>(undirected, undirected.edgeSet(), v -> v == v1, e -> e == e2);
     }
 
     public void testContains()
@@ -63,16 +61,12 @@ public class MaskEdgeSetTest
         assertFalse(testMaskedEdgeSet.contains(e1));
         assertFalse(testMaskedEdgeSet.contains(e2));
         assertTrue(testMaskedEdgeSet.contains(e3));
-
-        assertFalse(testMaskedEdgeSet.contains(loop1));
-        assertTrue(testMaskedEdgeSet.contains(loop2));
-
         assertFalse(testMaskedEdgeSet.contains(v1));
     }
 
     public void testSize()
     {
-        assertEquals(2, testMaskedEdgeSet.size());
+        assertEquals(1, testMaskedEdgeSet.size());
     }
 
     public void testIterator()
@@ -80,8 +74,6 @@ public class MaskEdgeSetTest
         Iterator<DefaultEdge> it = testMaskedEdgeSet.iterator();
         assertTrue(it.hasNext());
         assertEquals(e3, it.next());
-        assertTrue(it.hasNext());
-        assertEquals(loop2, it.next());
         assertFalse(it.hasNext());
     }
 }

@@ -17,11 +17,16 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.GraphWalk;
+import org.jgrapht.util.FibonacciHeap;
+import org.jgrapht.util.FibonacciHeapNode;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
 
 /**
  * A bidirectional version of Dijkstra's algorithm.
@@ -89,11 +94,8 @@ public final class BidirectionalDijkstraShortestPath<V, E>
         // create frontiers
         SearchFrontier forwardFrontier = new SearchFrontier(graph);
         SearchFrontier backwardFrontier;
-        if (graph.getType().isDirected()) {
-            backwardFrontier = new SearchFrontier(new EdgeReversedGraph<>(graph));
-        } else {
-            backwardFrontier = new SearchFrontier(graph);
-        }
+        backwardFrontier = new SearchFrontier(graph);
+
 
         assert !source.equals(sink);
 

@@ -17,14 +17,15 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
 
-import org.jgrapht.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Generates a ring graph of any size. A ring graph is a graph that contains a single cycle that
- * passes through all its vertices exactly once. For a directed graph, the generated edges are
- * oriented consistently around the ring.
+ * passes through all its vertices exactly once.
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type

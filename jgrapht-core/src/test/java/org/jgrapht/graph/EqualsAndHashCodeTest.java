@@ -17,9 +17,11 @@
  */
 package org.jgrapht.graph;
 
-import java.util.*;
+import org.jgrapht.EnhancedTestCase;
+import org.jgrapht.Graph;
 
-import org.jgrapht.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class EqualsAndHashCodeTest
     extends EnhancedTestCase
@@ -39,43 +41,6 @@ public class EqualsAndHashCodeTest
     public EqualsAndHashCodeTest(String name)
     {
         super(name);
-    }
-
-    /**
-     * Tests equals/hashCode methods for directed graphs.
-     */
-    public void testDefaultDirectedGraph()
-    {
-        Graph<String, DefaultEdge> g1 = new DefaultDirectedGraph<>(DefaultEdge.class);
-        g1.addVertex(v1);
-        g1.addVertex(v2);
-        g1.addVertex(v3);
-        g1.addVertex(v4);
-        DefaultEdge e12 = g1.addEdge(v1, v2);
-        DefaultEdge e23 = g1.addEdge(v2, v3);
-        DefaultEdge e31 = g1.addEdge(v3, v1);
-
-        Graph<String, DefaultEdge> g2 = new DefaultDirectedGraph<>(DefaultEdge.class);
-        g2.addVertex(v4);
-        g2.addVertex(v3);
-        g2.addVertex(v2);
-        g2.addVertex(v1);
-        g2.addEdge(v3, v1, e31);
-        g2.addEdge(v2, v3, e23);
-        g2.addEdge(v1, v2, e12);
-
-        Graph<String, DefaultEdge> g3 = new DefaultDirectedGraph<>(DefaultEdge.class);
-        g3.addVertex(v4);
-        g3.addVertex(v3);
-        g3.addVertex(v2);
-        g3.addVertex(v1);
-        g3.addEdge(v3, v1, e31);
-        g3.addEdge(v2, v3, e23);
-
-        assertTrue(g2.equals(g1));
-        assertTrue(!g3.equals(g2));
-
-        assertEquals(g2.hashCode(), g1.hashCode());
     }
 
     /**
@@ -120,21 +85,21 @@ public class EqualsAndHashCodeTest
      */
     public void testGraphsWithNonIntrusiveEdge()
     {
-        Graph<String, String> g1 = new DefaultDirectedGraph<>(String.class);
+        Graph<String, String> g1 = new SimpleGraph<>(String.class);
         g1.addVertex(v1);
         g1.addVertex(v2);
         g1.addVertex(v3);
         g1.addEdge(v1, v2, v1 + v2);
         g1.addEdge(v3, v1, v3 + v1);
 
-        Graph<String, String> g2 = new DefaultDirectedGraph<>(String.class);
+        Graph<String, String> g2 = new SimpleGraph<>(String.class);
         g2.addVertex(v3);
         g2.addVertex(v2);
         g2.addVertex(v1);
         g2.addEdge(v3, v1, v3 + v1);
         g2.addEdge(v1, v2, v1 + v2);
 
-        Graph<String, String> g3 = new DefaultDirectedGraph<>(String.class);
+        Graph<String, String> g3 = new SimpleGraph<>(String.class);
         g3.addVertex(v3);
         g3.addVertex(v2);
         g3.addVertex(v1);

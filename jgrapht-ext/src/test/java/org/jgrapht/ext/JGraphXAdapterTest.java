@@ -17,15 +17,18 @@
  */
 package org.jgrapht.ext;
 
-import static org.junit.Assert.fail;
+import com.mxgraph.model.mxICell;
+import org.jgrapht.Graph;
+import org.jgrapht.ListenableGraph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultListenableGraph;
+import org.jgrapht.graph.SimpleGraph;
+import org.junit.Assert;
+import org.junit.Test;
 
 import java.util.*;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.junit.*;
-
-import com.mxgraph.model.*;
+import static org.junit.Assert.fail;
 
 /**
  * Test methods for the class JGraphXAdapter.
@@ -40,7 +43,7 @@ public class JGraphXAdapterTest
     public void genericTest()
     {
         ListenableGraph<String, DefaultEdge> jGraphT =
-            new DefaultListenableGraph<>(new DefaultDirectedGraph<>(DefaultEdge.class));
+            new DefaultListenableGraph<>(new SimpleGraph<>(DefaultEdge.class));
 
         // fill graph with data
         String v1 = "Vertex 1";
@@ -91,7 +94,7 @@ public class JGraphXAdapterTest
     public void listenerTest()
     {
         ListenableGraph<String, String> jGraphT =
-            new DefaultListenableGraph<>(new DefaultDirectedGraph<>(String.class));
+            new DefaultListenableGraph<>(new SimpleGraph<>(String.class));
 
         JGraphXAdapter<String, String> graphX = new JGraphXAdapter<String, String>(jGraphT);
 
@@ -190,7 +193,7 @@ public class JGraphXAdapterTest
         final int maxEdges = 1000;
 
         ListenableGraph<Integer, DefaultEdge> jGraphT =
-            new DefaultListenableGraph<>(new DefaultDirectedGraph<>(DefaultEdge.class));
+            new DefaultListenableGraph<>(new SimpleGraph<>(DefaultEdge.class));
 
         for (int i = 0; i < maxVertices; i++) {
             jGraphT.addVertex(i);
@@ -220,7 +223,7 @@ public class JGraphXAdapterTest
     @Test
     public void notListenableTest()
     {
-        Graph<String, String> jGraphT = new DefaultDirectedGraph<String, String>(String.class);
+        Graph<String, String> jGraphT = new SimpleGraph<String, String>(String.class);
         // fill graph with data
         String v1 = "Vertex 1";
         String v2 = "Vertex 2";
@@ -270,7 +273,7 @@ public class JGraphXAdapterTest
     public void duplicateEntriesTest()
     {
         ListenableGraph<String, DefaultEdge> jGraphT =
-            new DefaultListenableGraph<>(new DefaultDirectedGraph<>(DefaultEdge.class));
+            new DefaultListenableGraph<>(new SimpleGraph<>(DefaultEdge.class));
 
         JGraphXAdapter<String, DefaultEdge> graphX =
             new JGraphXAdapter<String, DefaultEdge>(jGraphT);

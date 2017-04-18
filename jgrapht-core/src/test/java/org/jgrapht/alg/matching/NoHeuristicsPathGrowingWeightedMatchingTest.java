@@ -17,13 +17,16 @@
  */
 package org.jgrapht.alg.matching;
 
-import java.util.*;
-import java.util.stream.*;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.MatchingAlgorithm;
+import org.jgrapht.alg.interfaces.MatchingAlgorithm.Matching;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.WeightedPseudograph;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.interfaces.MatchingAlgorithm.*;
-import org.jgrapht.graph.*;
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Unit tests for the PathGrowingWeightedMatching without heuristics algorithm
@@ -137,44 +140,6 @@ public class NoHeuristicsPathGrowingWeightedMatchingTest
     {
         WeightedPseudograph<Integer, DefaultWeightedEdge> g =
             new WeightedPseudograph<>(DefaultWeightedEdge.class);
-
-        Graphs.addAllVertices(g, Arrays.asList(0, 1, 2, 3));
-        Graphs.addEdge(g, 0, 1, 1.0);
-        Graphs.addEdge(g, 1, 2, 1.0);
-        Graphs.addEdge(g, 2, 3, 1.0);
-        Graphs.addEdge(g, 3, 0, 1.0);
-        Graphs.addAllVertices(g, Arrays.asList(4, 5, 6, 7));
-        Graphs.addEdge(g, 4, 5, 1.0);
-        Graphs.addEdge(g, 5, 6, 1.0);
-        Graphs.addEdge(g, 6, 7, 1.0);
-        Graphs.addEdge(g, 7, 4, 1.0);
-
-        // add multiple edges
-        Graphs.addEdge(g, 0, 1, 2.0);
-        Graphs.addEdge(g, 1, 2, 2.0);
-        Graphs.addEdge(g, 2, 3, 2.0);
-        Graphs.addEdge(g, 3, 0, 2.0);
-        Graphs.addEdge(g, 4, 5, 2.0);
-        Graphs.addEdge(g, 5, 6, 2.0);
-        Graphs.addEdge(g, 6, 7, 2.0);
-        Graphs.addEdge(g, 7, 4, 2.0);
-
-        MatchingAlgorithm<Integer, DefaultWeightedEdge> mm =
-            new PathGrowingWeightedMatching<>(g, false);
-        Matching<DefaultWeightedEdge> m = mm.getMatching();
-
-        // maximum here is 8.0
-        // path growing algorithm gets 6.0
-        assertEquals(3, m.getEdges().size());
-        assertEquals(6.0, m.getWeight(), MatchingAlgorithm.DEFAULT_EPSILON);
-        assertTrue(isMatching(g, m));
-    }
-
-    @Override
-    public void testDirected()
-    {
-        DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
 
         Graphs.addAllVertices(g, Arrays.asList(0, 1, 2, 3));
         Graphs.addEdge(g, 0, 1, 1.0);

@@ -17,11 +17,15 @@
  */
 package org.jgrapht.alg;
 
-import java.util.*;
+import junit.framework.TestCase;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
-import org.jgrapht.graph.*;
-
-import junit.framework.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author Robby McKilliam
@@ -179,36 +183,6 @@ public class StoerWagnerMinimumCutTest
         Collections.addAll(solution2, v2, v3);
 
         assertEquals(1.0, mincut.minCutWeight(), 0.000001);
-        assertTrue(mincut.minCut().equals(solution1) || mincut.minCut().equals(solution2));
-    }
-
-    /**
-     * Test of StoerWagnerMinimumCut on a Multigraph.
-     */
-    public void testMinCutMultigraph()
-    {
-        WeightedMultigraph<String, DefaultWeightedEdge> g =
-            new WeightedMultigraph<>(DefaultWeightedEdge.class);
-        g.addVertex(v1);
-        g.addVertex(v2);
-        g.addVertex(v3);
-
-        DefaultWeightedEdge e;
-        e = g.addEdge(v1, v2);
-        g.setEdgeWeight(e, 1.5);
-        e = g.addEdge(v1, v2);
-        g.setEdgeWeight(e, 1.5);
-        e = g.addEdge(v2, v3);
-        g.setEdgeWeight(e, 2.0);
-
-        StoerWagnerMinimumCut<String, DefaultWeightedEdge> mincut = new StoerWagnerMinimumCut<>(g);
-
-        Set<String> solution1 = new HashSet<>();
-        Collections.addAll(solution1, v1, v2);
-        Set<String> solution2 = new HashSet<>();
-        Collections.addAll(solution2, v3);
-
-        assertEquals(2.0, mincut.minCutWeight(), 0.000001);
         assertTrue(mincut.minCut().equals(solution1) || mincut.minCut().equals(solution2));
     }
 

@@ -17,10 +17,9 @@
  */
 package org.jgrapht.demo;
 
-import java.net.*;
-
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 
 /**
  * A simple introduction to using JGraphT.
@@ -45,41 +44,6 @@ public final class HelloJGraphT
 
         // note undirected edges are printed as: {<v1>,<v2>}
         System.out.println(stringGraph.toString());
-
-        // create a graph based on URL objects
-        Graph<URL, DefaultEdge> hrefGraph = createHrefGraph();
-
-        // note directed edges are printed as: (<v1>,<v2>)
-        System.out.println(hrefGraph.toString());
-    }
-
-    /**
-     * Creates a toy directed graph based on URL objects that represents link structure.
-     *
-     * @return a graph based on URL objects.
-     */
-    private static Graph<URL, DefaultEdge> createHrefGraph()
-    {
-        Graph<URL, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
-
-        try {
-            URL amazon = new URL("http://www.amazon.com");
-            URL yahoo = new URL("http://www.yahoo.com");
-            URL ebay = new URL("http://www.ebay.com");
-
-            // add the vertices
-            g.addVertex(amazon);
-            g.addVertex(yahoo);
-            g.addVertex(ebay);
-
-            // add edges to create linking structure
-            g.addEdge(yahoo, amazon);
-            g.addEdge(yahoo, ebay);
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        }
-
-        return g;
     }
 
     /**

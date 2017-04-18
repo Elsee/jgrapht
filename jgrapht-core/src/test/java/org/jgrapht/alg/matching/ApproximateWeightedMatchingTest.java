@@ -17,15 +17,20 @@
  */
 package org.jgrapht.alg.matching;
 
-import java.util.*;
-import java.util.stream.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.MatchingAlgorithm;
+import org.jgrapht.alg.interfaces.MatchingAlgorithm.Matching;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleGraph;
+import org.jgrapht.graph.WeightedPseudograph;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.interfaces.MatchingAlgorithm.*;
-import org.jgrapht.graph.*;
-
-import junit.framework.*;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Unit tests for the approximate weighted matching algorithms.
@@ -268,40 +273,6 @@ public abstract class ApproximateWeightedMatchingTest
         Matching<DefaultWeightedEdge> m = mm.getMatching();
 
         // greedy finds maximum here 8.0
-        assertEquals(4, m.getEdges().size());
-        assertEquals(8.0, m.getWeight(), MatchingAlgorithm.DEFAULT_EPSILON);
-        assertTrue(isMatching(g, m));
-    }
-
-    public void testDirected()
-    {
-        DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-
-        Graphs.addAllVertices(g, Arrays.asList(0, 1, 2, 3));
-        Graphs.addEdge(g, 0, 1, 1.0);
-        Graphs.addEdge(g, 1, 2, 1.0);
-        Graphs.addEdge(g, 2, 3, 1.0);
-        Graphs.addEdge(g, 3, 0, 1.0);
-        Graphs.addAllVertices(g, Arrays.asList(4, 5, 6, 7));
-        Graphs.addEdge(g, 4, 5, 1.0);
-        Graphs.addEdge(g, 5, 6, 1.0);
-        Graphs.addEdge(g, 6, 7, 1.0);
-        Graphs.addEdge(g, 7, 4, 1.0);
-
-        // add multiple edges
-        Graphs.addEdge(g, 0, 1, 2.0);
-        Graphs.addEdge(g, 1, 2, 2.0);
-        Graphs.addEdge(g, 2, 3, 2.0);
-        Graphs.addEdge(g, 3, 0, 2.0);
-        Graphs.addEdge(g, 4, 5, 2.0);
-        Graphs.addEdge(g, 5, 6, 2.0);
-        Graphs.addEdge(g, 6, 7, 2.0);
-        Graphs.addEdge(g, 7, 4, 2.0);
-
-        MatchingAlgorithm<Integer, DefaultWeightedEdge> mm = getApproximationAlgorithm(g);
-        Matching<DefaultWeightedEdge> m = mm.getMatching();
-
         assertEquals(4, m.getEdges().size());
         assertEquals(8.0, m.getWeight(), MatchingAlgorithm.DEFAULT_EPSILON);
         assertTrue(isMatching(g, m));

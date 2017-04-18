@@ -102,7 +102,7 @@ public class GenericGraphsTest
 
     public void testAlissaHacker()
     {
-        Graph<String, CustomEdge> g = new DefaultDirectedGraph<>(CustomEdge.class);
+        Graph<String, CustomEdge> g = new SimpleGraph<>(CustomEdge.class);
         g.addVertex("a");
         g.addVertex("b");
         g.addEdge("a", "b");
@@ -144,7 +144,7 @@ public class GenericGraphsTest
     @Override
     protected void setUp()
     {
-        objectGraph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        objectGraph = new SimpleGraph<>(DefaultEdge.class);
         fooFooGraph = new SimpleGraph<>(FooEdge.class);
         barBarGraph = new SimpleGraph<>(BarEdge.class);
     }
@@ -185,7 +185,7 @@ public class GenericGraphsTest
 
         public EquivGraph()
         {
-            super(new ClassBasedEdgeFactory<>(DefaultEdge.class), false, true, true, false);
+            super(new ClassBasedEdgeFactory<>(DefaultEdge.class), true, true, false);
         }
     }
 

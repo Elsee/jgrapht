@@ -25,7 +25,6 @@ import java.util.Random;
 
 import org.jgrapht.Graph;
 import org.jgrapht.VertexFactory;
-import org.jgrapht.graph.DirectedPseudograph;
 import org.jgrapht.graph.Pseudograph;
 
 /**

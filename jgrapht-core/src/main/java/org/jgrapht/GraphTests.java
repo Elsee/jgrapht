@@ -17,10 +17,10 @@
  */
 package org.jgrapht;
 
-import java.util.*;
+import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.alg.cycle.HierholzerEulerianCycle;
 
-import org.jgrapht.alg.*;
-import org.jgrapht.alg.cycle.*;
+import java.util.*;
 
 /**
  * A collection of utilities to test for various graph properties.
@@ -31,10 +31,7 @@ import org.jgrapht.alg.cycle.*;
 public abstract class GraphTests
 {
     private static final String GRAPH_CANNOT_BE_NULL = "Graph cannot be null";
-    private static final String GRAPH_MUST_BE_DIRECTED_OR_UNDIRECTED =
-        "Graph must be directed or undirected";
     private static final String GRAPH_MUST_BE_UNDIRECTED = "Graph must be undirected";
-    private static final String GRAPH_MUST_BE_DIRECTED = "Graph must be directed";
     private static final String FIRST_PARTITION_CANNOT_BE_NULL = "First partition cannot be null";
     private static final String SECOND_PARTITION_CANNOT_BE_NULL = "Second partition cannot be null";
 
@@ -86,9 +83,7 @@ public abstract class GraphTests
 
     /**
      * Test whether a graph is complete. A complete undirected graph is a simple graph in which
-     * every pair of distinct vertices is connected by a unique edge. A complete directed graph is a
-     * directed graph in which every pair of distinct vertices is connected by a pair of unique
-     * edges (one in each direction).
+     * every pair of distinct vertices is connected by a unique edge.
      * 
      * @param graph the input graph
      * @param <V> the graph vertex type
@@ -100,16 +95,14 @@ public abstract class GraphTests
         Objects.requireNonNull(graph, GRAPH_CANNOT_BE_NULL);
         int n = graph.vertexSet().size();
         int allEdges;
-        if (graph.getType().isDirected()) {
-            allEdges = Math.multiplyExact(n, n - 1);
-        } else if (graph.getType().isUndirected()) {
+        if (graph.getType().isUndirected()) {
             if (n % 2 == 0) {
                 allEdges = Math.multiplyExact(n / 2, n - 1);
             } else {
                 allEdges = Math.multiplyExact(n, (n - 1) / 2);
             }
         } else {
-            throw new IllegalArgumentException(GRAPH_MUST_BE_DIRECTED_OR_UNDIRECTED);
+            throw new IllegalArgumentException(GRAPH_MUST_BE_UNDIRECTED);
         }
         return graph.edgeSet().size() == allEdges && isSimple(graph);
     }
@@ -136,44 +129,6 @@ public abstract class GraphTests
         }
 
         return new ConnectivityInspector<>(graph).isGraphConnected();
-    }
-
-    /**
-     * Test whether a directed graph is weakly connected.
-     * 
-     * <p>
-     * This method does not performing any caching, instead recomputes everything from scratch. In
-     * case more control is required use {@link ConnectivityInspector} directly.
-     *
-     * @param graph the input graph
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     * @return true if the graph is weakly connected, false otherwise
-     * @see ConnectivityInspector
-     */
-    public static <V, E> boolean isWeaklyConnected(Graph<V, E> graph)
-    {
-        Objects.requireNonNull(graph, GRAPH_CANNOT_BE_NULL);
-        return new ConnectivityInspector<>(graph).isGraphConnected();
-    }
-
-    /**
-     * Test whether a directed graph is strongly connected.
-     * 
-     * <p>
-     * This method does not performing any caching, instead recomputes everything from scratch. In
-     * case more control is required use {@link KosarajuStrongConnectivityInspector} directly.
-     *
-     * @param graph the input graph
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     * @return true if the graph is strongly connected, false otherwise
-     * @see KosarajuStrongConnectivityInspector
-     */
-    public static <V, E> boolean isStronglyConnected(Graph<V, E> graph)
-    {
-        Objects.requireNonNull(graph, GRAPH_CANNOT_BE_NULL);
-        return new KosarajuStrongConnectivityInspector<>(graph).isStronglyConnected();
     }
 
     /**
@@ -289,8 +244,7 @@ public abstract class GraphTests
 
     /**
      * Test whether a graph is Eulerian. An undirected graph is Eulerian if it is connected and each
-     * vertex has an even degree. A directed graph is Eulerian if it is strongly connected and each
-     * vertex has the same incoming and outgoing degree. Test whether a graph is Eulerian. An
+     * vertex has an even degree. Test whether a graph is Eulerian. An
      * <a href="http://mathworld.wolfram.com/EulerianGraph.html">Eulerian graph</a> is a graph
      * containing an <a href="http://mathworld.wolfram.com/EulerianCycle.html">Eulerian cycle</a>.
      *
@@ -305,46 +259,6 @@ public abstract class GraphTests
     {
         Objects.requireNonNull(graph, GRAPH_CANNOT_BE_NULL);
         return new HierholzerEulerianCycle<V, E>().isEulerian(graph);
-    }
-
-    /**
-     * Checks that the specified graph is directed and throws a customized
-     * {@link IllegalArgumentException} if it is not. Also checks that the graph reference is not
-     * {@code null} and throws a {@link NullPointerException} if it is.
-     *
-     * @param graph the graph reference to check for beeing directed and not null
-     * @param message detail message to be used in the event that an exception is thrown
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     * @return {@code graph} if directed and not {@code null}
-     * @throws NullPointerException if {@code graph} is {@code null}
-     * @throws IllegalArgumentException if {@code graph} is not directed
-     */
-    public static <V, E> Graph<V, E> requireDirected(Graph<V, E> graph, String message)
-    {
-        if (graph == null)
-            throw new NullPointerException(GRAPH_CANNOT_BE_NULL);
-        if (!graph.getType().isDirected()) {
-            throw new IllegalArgumentException(message);
-        }
-        return graph;
-    }
-
-    /**
-     * Checks that the specified graph is directed and throws an {@link IllegalArgumentException} if
-     * it is not. Also checks that the graph reference is not {@code null} and throws a
-     * {@link NullPointerException} if it is.
-     *
-     * @param graph the graph reference to check for beeing directed and not null
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     * @return {@code graph} if directed and not {@code null}
-     * @throws NullPointerException if {@code graph} is {@code null}
-     * @throws IllegalArgumentException if {@code graph} is not directed
-     */
-    public static <V, E> Graph<V, E> requireDirected(Graph<V, E> graph)
-    {
-        return requireDirected(graph, GRAPH_MUST_BE_DIRECTED);
     }
 
     /**
@@ -385,46 +299,6 @@ public abstract class GraphTests
     public static <V, E> Graph<V, E> requireUndirected(Graph<V, E> graph)
     {
         return requireUndirected(graph, GRAPH_MUST_BE_UNDIRECTED);
-    }
-
-    /**
-     * Checks that the specified graph is directed or undirected and throws a customized
-     * {@link IllegalArgumentException} if it is not. Also checks that the graph reference is not
-     * {@code null} and throws a {@link NullPointerException} if it is.
-     *
-     * @param graph the graph reference to check for beeing directed or undirected and not null
-     * @param message detail message to be used in the event that an exception is thrown
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     * @return {@code graph} if directed and not {@code null}
-     * @throws NullPointerException if {@code graph} is {@code null}
-     * @throws IllegalArgumentException if {@code graph} is mixed
-     */
-    public static <V, E> Graph<V, E> requireDirectedOrUndirected(Graph<V, E> graph, String message)
-    {
-        if (graph == null)
-            throw new NullPointerException(GRAPH_CANNOT_BE_NULL);
-        if (!graph.getType().isDirected() && !graph.getType().isUndirected()) {
-            throw new IllegalArgumentException(message);
-        }
-        return graph;
-    }
-
-    /**
-     * Checks that the specified graph is directed and throws an {@link IllegalArgumentException} if
-     * it is not. Also checks that the graph reference is not {@code null} and throws a
-     * {@link NullPointerException} if it is.
-     *
-     * @param graph the graph reference to check for beeing directed and not null
-     * @param <V> the graph vertex type
-     * @param <E> the graph edge type
-     * @return {@code graph} if directed and not {@code null}
-     * @throws NullPointerException if {@code graph} is {@code null}
-     * @throws IllegalArgumentException if {@code graph} is mixed
-     */
-    public static <V, E> Graph<V, E> requireDirectedOrUndirected(Graph<V, E> graph)
-    {
-        return requireDirectedOrUndirected(graph, GRAPH_MUST_BE_DIRECTED_OR_UNDIRECTED);
     }
 
 }

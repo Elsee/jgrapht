@@ -17,16 +17,20 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import static org.junit.Assert.assertEquals;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.generate.GnpRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.IntegerVertexFactory;
+import org.jgrapht.graph.WeightedPseudograph;
+import org.junit.Test;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Function;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Dimitrios Michail
@@ -91,7 +95,7 @@ public class AllPairsShortestPathsTest
 
         for (int i = 0; i < tests; i++) {
             Graph<Integer, DefaultWeightedEdge> g =
-                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+                new WeightedPseudograph<>(DefaultWeightedEdge.class);
             gen.generateGraph(g, new IntegerVertexFactory(), null);
 
             // assign random weights

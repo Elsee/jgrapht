@@ -17,12 +17,16 @@
  */
 package org.jgrapht.graph;
 
-import java.io.*;
-import java.util.*;
+import org.jgrapht.EdgeFactory;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphType;
+import org.jgrapht.Graphs;
+import org.jgrapht.graph.specifics.FastLookupUndirectedSpecifics;
+import org.jgrapht.graph.specifics.Specifics;
+import org.jgrapht.util.TypeUtil;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.specifics.*;
-import org.jgrapht.util.*;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * The most general implementation of the {@link org.jgrapht.Graph} interface. Its subclasses add
@@ -57,7 +61,6 @@ public abstract class AbstractBaseGraph<V, E>
     private Specifics<V, E> specifics;
     private IntrusiveEdgesSpecifics<V, E> intrusiveEdgesSpecifics;
 
-    private boolean directed;
     private boolean weighted;
     private boolean allowingMultipleEdges;
     private boolean allowingLoops;
@@ -72,7 +75,7 @@ public abstract class AbstractBaseGraph<V, E>
      *
      * @throws NullPointerException if the specified edge factory is <code>
      * null</code>.
-     * @deprecated Use {@link #AbstractBaseGraph(EdgeFactory, boolean, boolean, boolean, boolean)}
+     * @deprecated Use {@link #AbstractBaseGraph(EdgeFactory, boolean, boolean, boolean)}
      *             instead.
      */
     @Deprecated
@@ -86,13 +89,6 @@ public abstract class AbstractBaseGraph<V, E>
         this.allowingMultipleEdges = allowMultipleEdges;
         this.specifics =
             Objects.requireNonNull(createSpecifics(), GRAPH_SPECIFICS_MUST_NOT_BE_NULL);
-        if (this instanceof DirectedGraph<?, ?>) {
-            this.directed = true;
-        } else if (this instanceof UndirectedGraph<?, ?>) {
-            this.directed = false;
-        } else {
-            throw new IllegalArgumentException("Graph must be either directed or undirected");
-        }
         this.weighted = false;
         this.intrusiveEdgesSpecifics = Objects
             .requireNonNull(createIntrusiveEdgesSpecifics(false), GRAPH_SPECIFICS_MUST_NOT_BE_NULL);
@@ -103,7 +99,6 @@ public abstract class AbstractBaseGraph<V, E>
      * specified edge factory.
      *
      * @param ef the edge factory of the new graph.
-     * @param directed if true the graph will be directed, otherwise undirected
      * @param allowMultipleEdges whether to allow multiple edges or not.
      * @param allowLoops whether to allow edges that are self-loops or not.
      * @param weighted whether the graph is weighted, i.e. the edges support a weight attribute
@@ -112,7 +107,7 @@ public abstract class AbstractBaseGraph<V, E>
      * null</code>.
      */
     protected AbstractBaseGraph(
-        EdgeFactory<V, E> ef, boolean directed, boolean allowMultipleEdges, boolean allowLoops,
+        EdgeFactory<V, E> ef, boolean allowMultipleEdges, boolean allowLoops,
         boolean weighted)
     {
         Objects.requireNonNull(ef);
@@ -120,9 +115,8 @@ public abstract class AbstractBaseGraph<V, E>
         this.edgeFactory = ef;
         this.allowingLoops = allowLoops;
         this.allowingMultipleEdges = allowMultipleEdges;
-        this.directed = directed;
         this.specifics =
-            Objects.requireNonNull(createSpecifics(directed), GRAPH_SPECIFICS_MUST_NOT_BE_NULL);
+            Objects.requireNonNull(createSpecifics(), GRAPH_SPECIFICS_MUST_NOT_BE_NULL);
         this.weighted = weighted;
         this.intrusiveEdgesSpecifics = Objects.requireNonNull(
             createIntrusiveEdgesSpecifics(weighted), GRAPH_SPECIFICS_MUST_NOT_BE_NULL);
@@ -167,16 +161,6 @@ public abstract class AbstractBaseGraph<V, E>
     public boolean isWeighted()
     {
         return weighted;
-    }
-
-    /**
-     * Returns <code>true</code> if the graph is directed, false if undirected.
-     *
-     * @return <code>true</code> if the graph is directed, false if undirected.
-     */
-    public boolean isDirected()
-    {
-        return directed;
     }
 
     /**
@@ -310,7 +294,7 @@ public abstract class AbstractBaseGraph<V, E>
             // NOTE: it's important for this to happen in an object
             // method so that the new inner class instance gets associated with
             // the right outer class instance
-            newGraph.specifics = newGraph.createSpecifics(this.directed);
+            newGraph.specifics = newGraph.createSpecifics();
             newGraph.intrusiveEdgesSpecifics =
                 newGraph.createIntrusiveEdgesSpecifics(this.weighted);
 
@@ -508,61 +492,16 @@ public abstract class AbstractBaseGraph<V, E>
     @Override
     public GraphType getType()
     {
-        if (directed) {
-            return new DefaultGraphType.Builder()
-                .directed().weighted(weighted).allowMultipleEdges(allowingMultipleEdges)
-                .allowSelfLoops(allowingLoops).build();
-        } else {
-            return new DefaultGraphType.Builder()
-                .undirected().weighted(weighted).allowMultipleEdges(allowingMultipleEdges)
-                .allowSelfLoops(allowingLoops).build();
-        }
+        return new DefaultGraphType.Builder()
+            .undirected().weighted(weighted).allowMultipleEdges(allowingMultipleEdges)
+            .allowSelfLoops(allowingLoops).build();
     }
 
-    /**
-     * Create the specifics for this graph. Subclasses can override this method in order to adjust
-     * the specifics and thus the space-time tradeoffs of the graph implementation.
-     * 
-     * @return the specifics used by this graph
-     * @deprecated Use {@link #createSpecifics(boolean)} instead.
-     */
-    @Deprecated
     protected Specifics<V, E> createSpecifics()
     {
-        if (this instanceof DirectedGraph<?, ?>) {
-            return new FastLookupDirectedSpecifics<>(this);
-        } else if (this instanceof UndirectedGraph<?, ?>) {
-            return new FastLookupUndirectedSpecifics<>(this);
-        } else {
-            throw new IllegalArgumentException(
-                "must be instance of either DirectedGraph or UndirectedGraph");
-        }
+        return new FastLookupUndirectedSpecifics<>(this);
     }
 
-    /**
-     * Create the specifics for this graph. Subclasses can override this method in order to adjust
-     * the specifics and thus the space-time tradeoffs of the graph implementation.
-     * 
-     * @param directed if true the specifics should adjust the behavior to a directed graph
-     *        otherwise undirected
-     * @return the specifics used by this graph
-     */
-    protected Specifics<V, E> createSpecifics(boolean directed)
-    {
-        /*
-         * Try-catch only for backward-compatibility, remove after next release.
-         */
-        try {
-            return createSpecifics();
-        } catch (IllegalArgumentException ignore) {
-        }
-
-        if (directed) {
-            return new FastLookupDirectedSpecifics<>(this);
-        } else {
-            return new FastLookupUndirectedSpecifics<>(this);
-        }
-    }
 
     /**
      * Create the specifics for the edges set of the graph.

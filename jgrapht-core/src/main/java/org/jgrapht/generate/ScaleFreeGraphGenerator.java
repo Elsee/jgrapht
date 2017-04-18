@@ -17,12 +17,13 @@
  */
 package org.jgrapht.generate;
 
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
+
 import java.util.*;
 
-import org.jgrapht.*;
-
 /**
- * Generates directed or undirected
+ * Generates undirected
  * <a href = "http://mathworld.wolfram.com/Scale-FreeNetwork.html">scale-free network</a> of any
  * size. Scale-free network is a connected graph, where degrees of vertices are distributed in
  * unusual way. There are many vertices with small degrees and only small amount of vertices with

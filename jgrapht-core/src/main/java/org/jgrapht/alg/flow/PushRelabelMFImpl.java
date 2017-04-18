@@ -17,11 +17,11 @@
  */
 package org.jgrapht.alg.flow;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.util.Pair;
+import org.jgrapht.alg.util.extension.ExtensionFactory;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.alg.util.extension.*;
+import java.util.*;
 
 /**
  * <p>
@@ -37,8 +37,8 @@ import org.jgrapht.alg.util.extension.*;
  * implementation first computes a minimum s-t flow, after which a BFS is run on the residual graph.
  * </p>
  *
- * Note: even though the algorithm accepts any kind of graph, currently only Simple directed and
- * undirected graphs are supported (and tested!).
+ * Note: even though the algorithm accepts any kind of graph, currently only Simple undirected graphs
+ * are supported (and tested!).
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
@@ -246,7 +246,7 @@ public class PushRelabelMFImpl<V, E>
         // this.
         for (E e : network.edgesOf(sink)) {
             AnnotatedFlowEdge edge = edgeExtensionManager.getExtension(e);
-            maxFlowValue += (directedGraph ? edge.flow : edge.flow + edge.getInverse().flow);
+            maxFlowValue += (edge.flow + edge.getInverse().flow);
         }
 
         if (DIAGNOSTIC_ENABLED) {
