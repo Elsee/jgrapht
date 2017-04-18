@@ -30,9 +30,7 @@ import java.util.*;
 
 /**
  * The most general implementation of the {@link org.jgrapht.Graph} interface. Its subclasses add
- * various restrictions to get more specific graphs. The decision whether it is directed or
- * undirected is decided at construction time and cannot be later modified (see constructor for
- * details).
+ * various restrictions to get more specific graphs.
  *
  * <p>
  * This graph implementation guarantees deterministic vertex and edge set ordering (via
@@ -66,8 +64,7 @@ public abstract class AbstractBaseGraph<V, E>
     private boolean allowingLoops;
 
     /**
-     * Construct a new graph. The graph can either be directed or undirected, depending on the
-     * specified edge factory. The graph is by default unweighted.
+     * Construct a new graph. The graph can either be undirected. The graph is by default unweighted.
      *
      * @param ef the edge factory of the new graph.
      * @param allowMultipleEdges whether to allow multiple edges or not.
@@ -95,8 +92,7 @@ public abstract class AbstractBaseGraph<V, E>
     }
 
     /**
-     * Construct a new graph. The graph can either be directed or undirected, depending on the
-     * specified edge factory.
+     * Construct a new graph. The graph canbe undirected.
      *
      * @param ef the edge factory of the new graph.
      * @param allowMultipleEdges whether to allow multiple edges or not.
