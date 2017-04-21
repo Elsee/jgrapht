@@ -2,11 +2,11 @@ package org.jgrapht.io;
 
 import junit.framework.TestCase;
 import org.jgrapht.Graph;
-import org.jgrapht.graph.*;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.Pseudograph;
+import org.jgrapht.graph.SimpleGraph;
 
 import java.io.File;
-import java.io.StringReader;
-import java.io.StringWriter;
 
 /**
  * Created by Stanislav on 27.03.2017.
@@ -17,8 +17,8 @@ public class FileGraphImportExportFacadeTest  extends TestCase {
 
 
     public void testCSV(){
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        Graph<String, DefaultEdge> g2 = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g2 = new SimpleGraph<>(DefaultEdge.class);
         g.addVertex(1);
         g.addVertex(2);
         g.addVertex(3);
@@ -26,15 +26,8 @@ public class FileGraphImportExportFacadeTest  extends TestCase {
         g.addVertex(5);
         g.addEdge(1, 2);
         g.addEdge(1, 3);
-        g.addEdge(3, 1);
         g.addEdge(3, 4);
         g.addEdge(4, 5);
-        g.addEdge(5, 1);
-        g.addEdge(5, 2);
-        g.addEdge(5, 3);
-        g.addEdge(5, 4);
-        g.addEdge(5, 5);
-        g.addEdge(5, 5);
 
         File file = new File("./src/test/export/CSVDirectedAdjList.txt");
         FileGraphImportExportFacade<String, DefaultEdge> facade = new FileGraphImportExportFacade(file, ImportExportType.CSV);
@@ -53,8 +46,8 @@ public class FileGraphImportExportFacadeTest  extends TestCase {
         assertEquals(g.toString(), g2.toString());
     }
 public void testGml(){
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        Graph<String, DefaultEdge> g2 = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g2 = new Pseudograph<>(DefaultEdge.class);
         g.addVertex(1);
         g.addVertex(2);
         g.addVertex(3);
@@ -90,8 +83,8 @@ public void testGml(){
     }
 
 public void testDIMACS(){
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        Graph<String, DefaultEdge> g2 = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g2 = new Pseudograph<>(DefaultEdge.class);
         g.addVertex(1);
         g.addVertex(2);
         g.addVertex(3);
@@ -127,8 +120,8 @@ public void testDIMACS(){
     }
 
 public void testGraphML(){
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        Graph<String, DefaultEdge> g2 = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g2 = new Pseudograph<>(DefaultEdge.class);
         g.addVertex(1);
         g.addVertex(2);
         g.addVertex(3);
@@ -165,8 +158,8 @@ public void testGraphML(){
 
 
 public void testDOT(){
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        Graph<String, DefaultEdge> g2 = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g2 = new Pseudograph<>(DefaultEdge.class);
         g.addVertex(1);
         g.addVertex(2);
         g.addVertex(3);

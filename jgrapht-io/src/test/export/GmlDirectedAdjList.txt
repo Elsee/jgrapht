@@ -3,7 +3,7 @@ Version 1
 graph
 [
 	label ""
-	directed 1
+	directed 0
 	node
 	[
 		id 1
