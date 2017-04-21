@@ -37,7 +37,7 @@ public class GnmRandomBipartiteGraphGeneratorTest
     {
         GraphGenerator<Integer, DefaultEdge, Integer> gen =
             new GnmRandomBipartiteGraphGenerator<>(0, 0, 10);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
         gen.generateGraph(g, new IntegerVertexFactory(), null);
         assertEquals(0, g.vertexSet().size());
         assertEquals(0, g.edgeSet().size());
@@ -62,24 +62,6 @@ public class GnmRandomBipartiteGraphGeneratorTest
             fail("Bad parameter");
         } catch (IllegalArgumentException e) {
         }
-    }
-
-    public void testDirectedGraphGnm1()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnmRandomBipartiteGraphGenerator<>(4, 4, 20, SEED);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(), null);
-
-        int[][] edges = { { 3, 5 }, { 6, 3 }, { 2, 8 }, { 7, 2 }, { 6, 2 }, { 4, 5 }, { 7, 4 },
-            { 2, 5 }, { 6, 1 }, { 5, 1 }, { 2, 7 }, { 1, 7 }, { 2, 6 }, { 3, 6 }, { 1, 5 },
-            { 7, 3 }, { 1, 8 }, { 8, 3 }, { 4, 7 }, { 4, 8 } };
-
-        assertEquals(4 + 4, g.vertexSet().size());
-        for (int[] e : edges) {
-            assertTrue(g.containsEdge(e[0], e[1]));
-        }
-        assertEquals(edges.length, g.edgeSet().size());
     }
 
     public void testUndirectedGraphGnm1()
@@ -113,7 +95,7 @@ public class GnmRandomBipartiteGraphGeneratorTest
         try {
             GraphGenerator<Integer, DefaultEdge, Integer> gen =
                 new GnmRandomBipartiteGraphGenerator<>(4, 4, 33, SEED);
-            Graph<Integer, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
+            Graph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
             gen.generateGraph(g, new IntegerVertexFactory(), null);
             fail("More edges than permitted");
         } catch (IllegalArgumentException e) {

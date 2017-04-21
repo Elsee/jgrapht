@@ -17,16 +17,19 @@
  */
 package org.jgrapht.graph;
 
-import java.util.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graphs;
+import org.jgrapht.UndirectedGraph;
+import org.jgrapht.WeightedGraph;
+import org.jgrapht.util.WeightCombiner;
 
-import org.jgrapht.*;
-import org.jgrapht.util.*;
-
-import junit.framework.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 /**
- * Unit test for the {@link DirectedGraphUnion} class, {@link UndirectedGraphUnion} class,
- * {@link MixedGraphUnion} class.
+ * Unit test for the {@link UndirectedGraphUnion} class
  *
  * @author Joris Kinable
  * @since Aug 24, 2015
@@ -56,9 +59,6 @@ public class UnionGraphTest
     SimpleGraph<String, DefaultEdge> undirectedGraph1;
     SimpleGraph<String, DefaultEdge> undirectedGraph2;
 
-    DirectedGraph<String, DefaultEdge> directedGraph1;
-    DirectedGraph<String, DefaultEdge> directedGraph2;
-
     // ~ Methods ----------------------------------------------------------------
 
     @Override
@@ -66,31 +66,19 @@ public class UnionGraphTest
     {
         undirectedGraph1 = new SimpleWeightedGraph<>(DefaultEdge.class);
         undirectedGraph2 = new SimpleWeightedGraph<>(DefaultEdge.class);
-        directedGraph1 = new SimpleDirectedGraph<>(DefaultEdge.class);
-        directedGraph2 = new SimpleDirectedGraph<>(DefaultEdge.class);
 
         Graphs.addAllVertices(undirectedGraph1, Arrays.asList(v0, v1, v4));
         Graphs.addAllVertices(undirectedGraph2, Arrays.asList(v1, v2, v3, v4));
-        Graphs.addAllVertices(directedGraph1, Arrays.asList(v0, v1, v4));
-        Graphs.addAllVertices(directedGraph2, Arrays.asList(v1, v2, v3, v4));
 
         undirectedGraph1.addEdge(v0, v1, e1);
         undirectedGraph1.addEdge(v1, v4, e2);
         undirectedGraph1.addEdge(v4, v0, e3);
-
-        directedGraph1.addEdge(v0, v1, e1);
-        directedGraph1.addEdge(v1, v4, e2);
-        directedGraph1.addEdge(v4, v0, e3);
 
         undirectedGraph2.addEdge(v4, v1, e7);
         undirectedGraph2.addEdge(v1, v2, e4);
         undirectedGraph2.addEdge(v2, v3, e5);
         undirectedGraph2.addEdge(v3, v4, e6);
 
-        directedGraph2.addEdge(v4, v1, e7);
-        directedGraph2.addEdge(v1, v2, e4);
-        directedGraph2.addEdge(v2, v3, e5);
-        directedGraph2.addEdge(v3, v4, e6);
     }
 
     /**
@@ -110,64 +98,6 @@ public class UnionGraphTest
 
         assertTrue(graphUnion.getEdge(v1, v4) == e2);
         assertTrue(graphUnion.getEdge(v4, v1) == e2);
-    }
-
-    /**
-     * Create and test the union of two Directed Graphs
-     */
-    public void testDirectedGraphUnion()
-    {
-        DirectedGraphUnion<String, DefaultEdge> graphUnion =
-            new DirectedGraphUnion<>(directedGraph1, directedGraph2);
-        assertEquals(new HashSet<>(Arrays.asList(v0, v1, v2, v3, v4)), graphUnion.vertexSet());
-        assertEquals(
-            new HashSet<>(Arrays.asList(e1, e2, e3, e4, e5, e6, e7)), graphUnion.edgeSet());
-        assertEquals(new HashSet<>(Arrays.asList(e2, e3, e6, e7)), graphUnion.edgesOf(v4));
-        assertEquals(new HashSet<>(Arrays.asList(e3, e7)), graphUnion.outgoingEdgesOf(v4));
-        assertEquals(new HashSet<>(Arrays.asList(e2, e6)), graphUnion.incomingEdgesOf(v4));
-
-        assertTrue(graphUnion.getG1() == directedGraph1);
-        assertTrue(graphUnion.getG2() == directedGraph2);
-
-        assertFalse(directedGraph1.containsEdge(v4, v1));
-        assertFalse(directedGraph2.containsEdge(v1, v4));
-        assertTrue(graphUnion.getEdge(v1, v4) == e2);
-        assertTrue(graphUnion.getEdge(v4, v1) == e7);
-
-        assertEquals(2, graphUnion.outDegreeOf(v1));
-        assertEquals(2, graphUnion.outDegreeOf(v4));
-        assertEquals(2, graphUnion.inDegreeOf(v1));
-        assertEquals(2, graphUnion.inDegreeOf(v4));
-    }
-
-    /**
-     * Create and test a Mixed-Graph, obtained by taking the union of a undirected and a directed
-     * graph
-     */
-    public void testMixedGraphUnion()
-    {
-        MixedGraphUnion<String, DefaultEdge> graphUnion =
-            new MixedGraphUnion<>(undirectedGraph1, directedGraph2);
-        assertEquals(new HashSet<>(Arrays.asList(v0, v1, v2, v3, v4)), graphUnion.vertexSet());
-        assertEquals(
-            new HashSet<>(Arrays.asList(e1, e2, e3, e4, e5, e6, e7)), graphUnion.edgeSet());
-        assertEquals(new HashSet<>(Arrays.asList(e2, e3, e6, e7)), graphUnion.edgesOf(v4));
-        assertEquals(new HashSet<>(Arrays.asList(e2, e3, e7)), graphUnion.outgoingEdgesOf(v4));
-        assertEquals(new HashSet<>(Arrays.asList(e2, e3, e6)), graphUnion.incomingEdgesOf(v4));
-
-        assertTrue(graphUnion.getG1() == undirectedGraph1);
-        assertTrue(graphUnion.getG2() == directedGraph2);
-
-        assertTrue(graphUnion.containsEdge(v0, v1)); // undirected edge
-        assertTrue(graphUnion.containsEdge(v1, v0)); // undirected edge
-        assertTrue(graphUnion.containsEdge(v3, v4)); // directed edge
-        assertFalse(graphUnion.containsEdge(v4, v3)); // directed edge
-
-        assertEquals(3, graphUnion.outDegreeOf(v1));
-        assertEquals(3, graphUnion.outDegreeOf(v4));
-        assertEquals(3, graphUnion.inDegreeOf(v1));
-        assertEquals(3, graphUnion.inDegreeOf(v4));
-
     }
 
     /**

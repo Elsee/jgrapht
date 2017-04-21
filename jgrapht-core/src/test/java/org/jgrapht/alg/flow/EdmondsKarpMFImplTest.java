@@ -17,11 +17,12 @@
  */
 package org.jgrapht.alg.flow;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.WeightedMultigraph;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.graph.*;
+import java.util.Map;
 
 public class EdmondsKarpMFImplTest
     extends MaximumFlowAlgorithmTest
@@ -37,8 +38,8 @@ public class EdmondsKarpMFImplTest
 
     public void testCornerCases()
     {
-        DirectedWeightedMultigraph<Integer, DefaultWeightedEdge> simple =
-            new DirectedWeightedMultigraph<>(DefaultWeightedEdge.class);
+        WeightedMultigraph<Integer, DefaultWeightedEdge> simple =
+            new WeightedMultigraph<>(DefaultWeightedEdge.class);
         simple.addVertex(0);
         simple.addVertex(1);
         DefaultWeightedEdge e = simple.addEdge(0, 1);

@@ -17,13 +17,14 @@
  */
 package org.jgrapht.io;
 
-import java.io.*;
-import java.util.*;
-
-import org.jgrapht.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.*;
 
-import junit.framework.*;
+import java.io.ByteArrayOutputStream;
+import java.io.StringReader;
+import java.io.UnsupportedEncodingException;
+import java.util.Map;
 
 /**
  * .
@@ -35,22 +36,14 @@ public class GmlImporterTest
 {
 
     public <E> Graph<String, E> readGraph(
-        String input, Class<? extends E> edgeClass, boolean directed, boolean weighted)
+        String input, Class<? extends E> edgeClass, boolean undirected, boolean weighted)
         throws ImportException
     {
         Graph<String, E> g;
-        if (directed) {
-            if (weighted) {
-                g = new DirectedWeightedPseudograph<String, E>(edgeClass);
-            } else {
-                g = new DirectedPseudograph<String, E>(edgeClass);
-            }
+        if (weighted) {
+            g = new WeightedPseudograph<String, E>(edgeClass);
         } else {
-            if (weighted) {
-                g = new WeightedPseudograph<String, E>(edgeClass);
-            } else {
-                g = new Pseudograph<String, E>(edgeClass);
-            }
+            g = new Pseudograph<String, E>(edgeClass);
         }
 
         GmlImporter<String, E> importer = new GmlImporter<String, E>(
@@ -460,8 +453,8 @@ public class GmlImporterTest
     public void testExportImport()
         throws ImportException, ExportException, UnsupportedEncodingException
     {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g1 =
-            new DirectedWeightedPseudograph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
+        WeightedPseudograph<String, DefaultWeightedEdge> g1 =
+            new WeightedPseudograph<String, DefaultWeightedEdge>(DefaultWeightedEdge.class);
         g1.addVertex("1");
         g1.addVertex("2");
         g1.addVertex("3");

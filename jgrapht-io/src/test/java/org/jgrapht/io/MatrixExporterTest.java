@@ -17,15 +17,13 @@
  */
 package org.jgrapht.io;
 
-import java.io.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.Pseudograph;
+import org.jgrapht.graph.SimpleGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.io.ExportException;
-import org.jgrapht.io.GraphExporter;
-import org.jgrapht.io.MatrixExporter;
-
-import junit.framework.*;
+import java.io.StringWriter;
 
 /**
  * .
@@ -95,24 +93,6 @@ public class MatrixExporterTest
         StringWriter w = new StringWriter();
         exporter.exportGraph(g, w);
         assertEquals(UNDIRECTED_ADJACENCY, w.toString());
-    }
-
-    public void testAdjacencyDirected()
-        throws ExportException
-    {
-        Graph<String, DefaultEdge> g =
-            new DirectedMultigraph<String, DefaultEdge>(DefaultEdge.class);
-        g.addVertex(V1);
-        g.addVertex(V2);
-        g.addEdge(V1, V2);
-        g.addVertex(V3);
-        g.addEdge(V3, V1);
-        g.addEdge(V3, V1);
-
-        GraphExporter<String, DefaultEdge> exporter = new MatrixExporter<>();
-        Writer w = new StringWriter();
-        exporter.exportGraph(g, w);
-        assertEquals(DIRECTED_ADJACENCY, w.toString());
     }
 }
 

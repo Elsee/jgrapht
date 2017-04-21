@@ -17,15 +17,18 @@
  */
 package org.jgrapht.alg.shortestpath;
 
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.util.Pair;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.WeightedPseudograph;
+import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
-import java.util.*;
-
-import org.jgrapht.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.graph.*;
-import org.junit.*;
 
 /**
  * @author Dimitrios Michail
@@ -36,8 +39,8 @@ public class TreeSingleSourcePathsTest
     @Test
     public void test()
     {
-        DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<Integer, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         Graphs.addAllVertices(g, Arrays.asList(1, 2, 3, 4));
         DefaultWeightedEdge e12_1 = g.addEdge(1, 2);
         g.setEdgeWeight(e12_1, -5.0);

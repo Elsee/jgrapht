@@ -17,11 +17,12 @@
  */
 package org.jgrapht;
 
-import java.util.*;
-
-import org.jgrapht.generate.*;
+import org.jgrapht.generate.GnpRandomBipartiteGraphGenerator;
 import org.jgrapht.graph.*;
-import org.junit.*;
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.*;
 
 /**
  * Test class GraphTests.
@@ -34,7 +35,7 @@ public class GraphTestsTest
     @Test
     public void testIsEmpty()
     {
-        Graph<Integer, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
         Assert.assertTrue(GraphTests.isEmpty(g));
         g.addVertex(1);
         Assert.assertTrue(GraphTests.isEmpty(g));
@@ -50,85 +51,22 @@ public class GraphTestsTest
     public void testIsSimple()
     {
         // test empty
-        Graph<Integer, DefaultEdge> g1 = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g1 = new SimpleGraph<>(DefaultEdge.class);
         Assert.assertTrue(GraphTests.isSimple(g1));
 
         Graph<Integer, DefaultEdge> g2 = new SimpleGraph<>(DefaultEdge.class);
         Assert.assertTrue(GraphTests.isSimple(g2));
 
-        Graph<Integer, DefaultEdge> g3 = new DirectedPseudograph<>(DefaultEdge.class);
-        Assert.assertTrue(GraphTests.isSimple(g1));
-
+        Graph<Integer, DefaultEdge> g3 = new Pseudograph<>(DefaultEdge.class);
         Graphs.addAllVertices(g3, Arrays.asList(1, 2));
-        g3.addEdge(1, 2);
-        g3.addEdge(2, 1);
         Assert.assertTrue(GraphTests.isSimple(g3));
-        DefaultEdge g3e11 = g3.addEdge(1, 1);
-        Assert.assertFalse(GraphTests.isSimple(g3));
-        g3.removeEdge(g3e11);
-        Assert.assertTrue(GraphTests.isSimple(g3));
+        DefaultEdge g4e12 = g3.addEdge(1, 2);
         g3.addEdge(2, 1);
         Assert.assertFalse(GraphTests.isSimple(g3));
-
-        Graph<Integer, DefaultEdge> g4 = new Pseudograph<>(DefaultEdge.class);
-        Graphs.addAllVertices(g4, Arrays.asList(1, 2));
-        Assert.assertTrue(GraphTests.isSimple(g4));
-        DefaultEdge g4e12 = g4.addEdge(1, 2);
-        g4.addEdge(2, 1);
-        Assert.assertFalse(GraphTests.isSimple(g4));
-        g4.removeEdge(g4e12);
-        Assert.assertTrue(GraphTests.isSimple(g4));
-        g4.addEdge(1, 1);
-        Assert.assertFalse(GraphTests.isSimple(g4));
-    }
-
-    @Test
-    public void testIsCompleteDirected()
-    {
-        Graph<Integer, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
-        Assert.assertTrue(GraphTests.isComplete(g));
-        g.addVertex(1);
-        Assert.assertTrue(GraphTests.isComplete(g));
-        g.addVertex(2);
-        Assert.assertFalse(GraphTests.isComplete(g));
-        g.addEdge(1, 2);
-        Assert.assertFalse(GraphTests.isComplete(g));
-        g.addEdge(2, 1);
-        Assert.assertTrue(GraphTests.isComplete(g));
-        g.addVertex(3);
-        Assert.assertFalse(GraphTests.isComplete(g));
-        g.addEdge(1, 3);
-        Assert.assertFalse(GraphTests.isComplete(g));
-        g.addEdge(3, 1);
-        Assert.assertFalse(GraphTests.isComplete(g));
-        g.addEdge(2, 3);
-        Assert.assertFalse(GraphTests.isComplete(g));
-        g.addEdge(3, 2);
-        Assert.assertTrue(GraphTests.isComplete(g));
-
-        // check loops
-        Graph<Integer, DefaultEdge> g1 = new DirectedPseudograph<>(DefaultEdge.class);
-        Assert.assertTrue(GraphTests.isComplete(g1));
-        g1.addVertex(1);
-        Assert.assertTrue(GraphTests.isComplete(g1));
-        g1.addVertex(2);
-        Assert.assertFalse(GraphTests.isComplete(g1));
-        g1.addEdge(1, 1);
-        g1.addEdge(2, 2);
-        Assert.assertFalse(GraphTests.isComplete(g1));
-
-        // check multiple edges
-        Graph<Integer, DefaultEdge> g2 = new DirectedPseudograph<>(DefaultEdge.class);
-        Assert.assertTrue(GraphTests.isComplete(g2));
-        Graphs.addAllVertices(g2, Arrays.asList(1, 2, 3));
-        Assert.assertFalse(GraphTests.isComplete(g2));
-        g2.addEdge(1, 2);
-        g2.addEdge(1, 3);
-        g2.addEdge(2, 3);
-        g2.addEdge(1, 1);
-        g2.addEdge(2, 2);
-        g2.addEdge(3, 3);
-        Assert.assertFalse(GraphTests.isComplete(g2));
+        g3.removeEdge(g4e12);
+        Assert.assertTrue(GraphTests.isSimple(g3));
+        g3.addEdge(1, 1);
+        Assert.assertFalse(GraphTests.isSimple(g3));
     }
 
     @Test
@@ -190,32 +128,6 @@ public class GraphTestsTest
         Assert.assertFalse(GraphTests.isConnected(g));
         g.addEdge(1, 3);
         Assert.assertTrue(GraphTests.isConnected(g));
-    }
-
-    @Test
-    public void testIsConnectedDirected()
-    {
-        Graph<Integer, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        Assert.assertFalse(GraphTests.isWeaklyConnected(g));
-        Assert.assertFalse(GraphTests.isStronglyConnected(g));
-        g.addVertex(1);
-        Assert.assertTrue(GraphTests.isWeaklyConnected(g));
-        Assert.assertTrue(GraphTests.isStronglyConnected(g));
-        g.addVertex(2);
-        Assert.assertFalse(GraphTests.isWeaklyConnected(g));
-        Assert.assertFalse(GraphTests.isStronglyConnected(g));
-        g.addEdge(1, 2);
-        Assert.assertTrue(GraphTests.isWeaklyConnected(g));
-        Assert.assertFalse(GraphTests.isStronglyConnected(g));
-        g.addVertex(3);
-        Assert.assertFalse(GraphTests.isWeaklyConnected(g));
-        Assert.assertFalse(GraphTests.isStronglyConnected(g));
-        g.addEdge(2, 3);
-        Assert.assertTrue(GraphTests.isWeaklyConnected(g));
-        Assert.assertFalse(GraphTests.isStronglyConnected(g));
-        g.addEdge(3, 1);
-        Assert.assertTrue(GraphTests.isWeaklyConnected(g));
-        Assert.assertTrue(GraphTests.isStronglyConnected(g));
     }
 
     @Test
@@ -295,21 +207,6 @@ public class GraphTestsTest
     }
 
     @Test
-    public void testBipartite4()
-    {
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-
-        for (int i = 0; i < 101; i++) {
-            g.addVertex(i);
-            if (i > 0) {
-                g.addEdge(i, i - 1);
-            }
-        }
-        g.addEdge(100, 0);
-        Assert.assertFalse(GraphTests.isBipartite(g));
-    }
-
-    @Test
     public void testRandomBipartite()
     {
         GnpRandomBipartiteGraphGenerator<Integer, DefaultEdge> generator =
@@ -326,7 +223,6 @@ public class GraphTestsTest
     {
         List<Graph<Integer, DefaultEdge>> gList = new ArrayList<>();
         gList.add(new Pseudograph<>(DefaultEdge.class));
-        gList.add(new DirectedPseudograph<>(DefaultEdge.class));
 
         for (Graph<Integer, DefaultEdge> g : gList) {
             Set<Integer> a = new HashSet<>();

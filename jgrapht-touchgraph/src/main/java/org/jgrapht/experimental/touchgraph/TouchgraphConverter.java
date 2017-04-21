@@ -42,8 +42,8 @@ public class TouchgraphConverter<V, E>
      * components (the set of nodes and edges) in its own way. The closest Touchgraph has to a graph
      * object is a GraphEltSet but Touchgraph does not provide the visibility to use it easily and
      * one can use a JGraphT graph. While JGraphT nodes can be any type of objects, TouchGraph uses
-     * a set of com.touchgraph.graphlayout.Node and com.touchgraph.graphlayout.Edge only. Moreover,
-     * TouchGraph edges are always directed. Having said that, if you want a nice way to visualize
+     * a set of com.touchgraph.graphlayout.Node and com.touchgraph.graphlayout.Edge only. Having said that,
+     * if you want a nice way to visualize
      * and explore a graph, especially large complex graphs, TouchGraph is very nice
      *
      * @param graph the JGraphT graph
@@ -90,7 +90,6 @@ public class TouchgraphConverter<V, E>
                 // subclass TG's Node class to show them
                 if ((i != j) || selfReferencesAllowed) {
                     if (graph.getEdge(jgtNodes.get(i), jgtNodes.get(j)) != null) {
-                        // add TG directed edge from i to j
                         tgPanel.addEdge(new Edge(tgNodes[i], tgNodes[j]));
                     }
                 }

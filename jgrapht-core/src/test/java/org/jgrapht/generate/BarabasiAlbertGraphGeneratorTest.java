@@ -17,15 +17,14 @@
  */
 package org.jgrapht.generate;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
 import org.jgrapht.Graph;
 import org.jgrapht.graph.DefaultEdge;
 import org.jgrapht.graph.IntegerVertexFactory;
-import org.jgrapht.graph.SimpleDirectedGraph;
 import org.jgrapht.graph.SimpleGraph;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Tests for {@link BarabasiAlbertGraphGenerator}.
@@ -83,32 +82,6 @@ public class BarabasiAlbertGraphGeneratorTest
         GraphGenerator<Integer, DefaultEdge, Integer> gen =
             new BarabasiAlbertGraphGenerator<>(1, 1, 20, seed);
         Graph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(), null);
-
-        assertEquals(20, g.vertexSet().size());
-    }
-
-    @Test
-    public void testDirected()
-    {
-        final long seed = 5;
-
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new BarabasiAlbertGraphGenerator<>(3, 2, 10, seed);
-        Graph<Integer, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(), null);
-
-        assertEquals(10, g.vertexSet().size());
-    }
-
-    @Test
-    public void testDirectedWithOneInitialNode()
-    {
-        final long seed = 13;
-
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new BarabasiAlbertGraphGenerator<>(1, 1, 20, seed);
-        Graph<Integer, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
         gen.generateGraph(g, new IntegerVertexFactory(), null);
 
         assertEquals(20, g.vertexSet().size());

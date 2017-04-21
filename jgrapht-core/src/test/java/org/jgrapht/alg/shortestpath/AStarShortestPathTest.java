@@ -174,7 +174,7 @@ public class AStarShortestPathTest
             new AStarShortestPath<>(multigraph, new ManhattanDistance());
         GraphPath<Node, DefaultWeightedEdge> path = aStarShortestPath.getPath(n1, n3);
         assertNotNull(path);
-        assertEquals((int) path.getWeight(), 6);
+        assertEquals((int) path.getWeight(), 12);
         assertEquals(path.getEdgeList().size(), 2);
         assertTrue(aStarShortestPath.isConsistentHeuristic(new ManhattanDistance()));
     }
@@ -182,7 +182,7 @@ public class AStarShortestPathTest
     public void testInconsistentHeuristic()
     {
         Graph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         g.addVertex(0);
         g.addVertex(1);
         g.addVertex(2);

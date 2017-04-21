@@ -73,7 +73,7 @@ public class JGraphAdapterDemo
     {
         // create a JGraphT graph
         ListenableGraph<String, DefaultEdge> g =
-            new ListenableDirectedMultigraph<>(DefaultEdge.class);
+            new ListenableUndirectedGraph<>(DefaultEdge.class);
 
         // create a visualization using JGraph, via an adapter
         jgAdapter = new JGraphModelAdapter<>(g);
@@ -142,20 +142,6 @@ public class JGraphAdapterDemo
         AttributeMap cellAttr = new AttributeMap();
         cellAttr.put(cell, attr);
         jgAdapter.edit(cellAttr, null, null, null);
-    }
-
-    /**
-     * A listenable directed multigraph that allows loops and parallel edges.
-     */
-    private static class ListenableDirectedMultigraph<V, E>
-        extends DefaultListenableGraph<V, E>
-    {
-        private static final long serialVersionUID = 1L;
-
-        ListenableDirectedMultigraph(Class<E> edgeClass)
-        {
-            super(new DirectedMultigraph<>(edgeClass));
-        }
     }
 }
 

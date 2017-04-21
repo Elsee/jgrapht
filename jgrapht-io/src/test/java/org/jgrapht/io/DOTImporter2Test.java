@@ -27,9 +27,8 @@ import java.util.Map;
 
 import org.jgrapht.Graphs;
 import org.jgrapht.graph.DefaultEdge;
-import org.jgrapht.graph.DirectedMultigraph;
-import org.jgrapht.graph.DirectedPseudograph;
 import org.junit.Test;
+import org.jgrapht.graph.Pseudograph;
 
 /**
  * 2nd part of tests for DOTImporter. See also {@link DOTImporter1Test}.
@@ -52,12 +51,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a", "b", "c", "k", "q", "d"));
         expected.addEdge("a", "b");
         expected.addEdge("b", "c");
@@ -92,12 +91,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(
             expected,
             Arrays.asList("a0", "a1", "a2", "a3", "b0", "b1", "b2", "b3", "start", "end"));
@@ -136,12 +135,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a0", "a1", "b0", "b1"));
         expected.addEdge("a0", "a1");
         expected.addEdge("b0", "b1");
@@ -177,12 +176,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(
             expected, Arrays.asList("a0", "a1", "a00", "a11", "b0", "b1", "b00", "b11"));
         expected.addEdge("a0", "a1");
@@ -221,12 +220,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a0", "a00", "a11", "b0", "b00", "b11"));
         expected.addEdge("a00", "a11");
         expected.addEdge("b00", "b11");
@@ -252,12 +251,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a0", "a00", "a11", "b0", "b00", "b11"));
         expected.addEdge("a00", "a11");
         expected.addEdge("b00", "b11");
@@ -283,12 +282,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a0", "a00", "a11", "b0", "b00", "b11"));
         expected.addEdge("a00", "a11");
         expected.addEdge("b00", "b11");
@@ -325,12 +324,12 @@ public class DOTImporter2Test
             return e;
         };
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a0", "a1", "a2", "a3", "a4", "a5"));
         expected.addEdge("a0", "a1");
         expected.addEdge("a2", "a3");
@@ -365,12 +364,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a0", "a1"));
         expected.addEdge("a0", "a1");
         assertEquals(expected.toString(), graph.toString());
@@ -400,12 +399,12 @@ public class DOTImporter2Test
         };
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("a0", "a1", "a2", "a3", "a4", "a5"));
         expected.addEdge("a0", "a1");
         expected.addEdge("a2", "a3");
@@ -447,8 +446,8 @@ public class DOTImporter2Test
         };
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
         assertEquals("myname", vertexAttributes.get("a0").get("name"));
@@ -484,8 +483,8 @@ public class DOTImporter2Test
         };
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         try {
             importer.importGraph(graph, new StringReader(input));
             fail("No!");
@@ -510,8 +509,8 @@ public class DOTImporter2Test
         };
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
         assertEquals("<h1/>", vertexAttributes.get("a0").get("name"));
@@ -544,35 +543,13 @@ public class DOTImporter2Test
             return e;
         };
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         try {
             importer.importGraph(graph, new StringReader(input));
             fail("No!");
         } catch (Error e) {
             assertEquals("Error", e.getMessage());
-        }
-    }
-
-    @Test
-    public void testLoopError()
-        throws ImportException
-    {
-        // @formatter:off
-        String input = "digraph G {" + NL +
-                       "  a0 -> a0;" + NL +
-                       "}";
-        // @formatter:on
-
-        VertexProvider<String> vp = (a, b) -> a;
-        EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
-        GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedMultigraph<String, DefaultEdge> graph =
-            new DirectedMultigraph<String, DefaultEdge>(DefaultEdge.class);
-        try {
-            importer.importGraph(graph, new StringReader(input));
-            fail("No!");
-        } catch (ImportException e) {
         }
     }
 
@@ -612,8 +589,8 @@ public class DOTImporter2Test
 
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
 
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
 
         importer.importGraph(graph, new StringReader(input));
     }
@@ -648,12 +625,12 @@ public class DOTImporter2Test
         VertexProvider<String> vp = (a, b) -> a;
         EdgeProvider<String, DefaultEdge> ep = (f, t, l, a) -> new DefaultEdge();
         GraphImporter<String, DefaultEdge> importer = new DOTImporter<String, DefaultEdge>(vp, ep);
-        DirectedPseudograph<String, DefaultEdge> graph =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> graph =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         importer.importGraph(graph, new StringReader(input));
 
-        DirectedPseudograph<String, DefaultEdge> expected =
-            new DirectedPseudograph<String, DefaultEdge>(DefaultEdge.class);
+        Pseudograph<String, DefaultEdge> expected =
+            new Pseudograph<String, DefaultEdge>(DefaultEdge.class);
         Graphs.addAllVertices(expected, Arrays.asList("struct1"));
         assertEquals(expected.toString(), graph.toString());
     }

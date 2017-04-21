@@ -17,11 +17,14 @@
  */
 package org.jgrapht.graph;
 
-import java.io.*;
-import java.util.*;
+import org.jgrapht.EdgeFactory;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphTests;
+import org.jgrapht.GraphType;
+import org.jgrapht.util.WeightCombiner;
 
-import org.jgrapht.*;
-import org.jgrapht.util.*;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * Read-only union of two graphs.
@@ -61,10 +64,10 @@ public class AsGraphUnion<V, E>
      */
     public AsGraphUnion(Graph<V, E> g1, Graph<V, E> g2, WeightCombiner operator)
     {
-        this.g1 = GraphTests.requireDirectedOrUndirected(g1);
+        this.g1 = GraphTests.requireUndirected(g1);
         this.type1 = g1.getType();
 
-        this.g2 = GraphTests.requireDirectedOrUndirected(g2);
+        this.g2 = GraphTests.requireUndirected(g2);
         this.type2 = g2.getType();
 
         if (g1 == g2) {
@@ -74,13 +77,8 @@ public class AsGraphUnion<V, E>
 
         // compute result type
         DefaultGraphType.Builder builder = new DefaultGraphType.Builder();
-        if (type1.isDirected() && type2.isDirected()) {
-            builder = builder.directed();
-        } else if (type1.isUndirected() && type2.isUndirected()) {
-            builder = builder.undirected();
-        } else {
-            builder = builder.mixed();
-        }
+        builder = builder.undirected();
+
         this.type = builder
             .allowSelfLoops(type1.isAllowingSelfLoops() || type2.isAllowingSelfLoops())
             .allowMultipleEdges(true).weighted(true).modifiable(false).build();
@@ -274,29 +272,17 @@ public class AsGraphUnion<V, E>
     @Override
     public int degreeOf(V vertex)
     {
-        if (type.isMixed()) {
-            int d = 0;
-            if (g1.containsVertex(vertex)) {
-                d += g1.degreeOf(vertex);
-            }
-            if (g2.containsVertex(vertex)) {
-                d += g2.degreeOf(vertex);
-            }
-            return d;
-        } else if (type.isUndirected()) {
-            int degree = 0;
-            Iterator<E> it = edgesOf(vertex).iterator();
-            while (it.hasNext()) {
-                E e = it.next();
+        int degree = 0;
+        Iterator<E> it = edgesOf(vertex).iterator();
+        while (it.hasNext()) {
+            E e = it.next();
+            degree++;
+            if (getEdgeSource(e).equals(getEdgeTarget(e))) {
                 degree++;
-                if (getEdgeSource(e).equals(getEdgeTarget(e))) {
-                    degree++;
-                }
             }
-            return degree;
-        } else {
-            return incomingEdgesOf(vertex).size() + outgoingEdgesOf(vertex).size();
         }
+        return degree;
+
     }
 
     /**
@@ -305,20 +291,7 @@ public class AsGraphUnion<V, E>
     @Override
     public int inDegreeOf(V vertex)
     {
-        if (type.isMixed()) {
-            int d = 0;
-            if (g1.containsVertex(vertex)) {
-                d += g1.inDegreeOf(vertex);
-            }
-            if (g2.containsVertex(vertex)) {
-                d += g2.inDegreeOf(vertex);
-            }
-            return d;
-        } else if (type.isUndirected()) {
-            return degreeOf(vertex);
-        } else {
-            return incomingEdgesOf(vertex).size();
-        }
+        return degreeOf(vertex);
     }
 
     /**
@@ -327,20 +300,7 @@ public class AsGraphUnion<V, E>
     @Override
     public int outDegreeOf(V vertex)
     {
-        if (type.isMixed()) {
-            int d = 0;
-            if (g1.containsVertex(vertex)) {
-                d += g1.outDegreeOf(vertex);
-            }
-            if (g2.containsVertex(vertex)) {
-                d += g2.outDegreeOf(vertex);
-            }
-            return d;
-        } else if (type.isUndirected()) {
-            return degreeOf(vertex);
-        } else {
-            return outgoingEdgesOf(vertex).size();
-        }
+        return degreeOf(vertex);
     }
 
     /**

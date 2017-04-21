@@ -17,15 +17,17 @@
  */
 package org.jgrapht.graph;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.util.TypeUtil;
 
-import org.jgrapht.*;
-import org.jgrapht.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 /**
  * A skeletal implementation of the <tt>Graph</tt> interface, to minimize the effort required to
- * implement graph interfaces. This implementation is applicable to both: directed graphs and
- * undirected graphs.
+ * implement graph interfaces.
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
@@ -107,7 +109,7 @@ public abstract class AbstractGraph<V, E>
     @Override
     public String toString()
     {
-        return toStringFromSets(vertexSet(), edgeSet(), this.getType().isDirected());
+        return toStringFromSets(vertexSet(), edgeSet());
     }
 
     /**
@@ -159,13 +161,11 @@ public abstract class AbstractGraph<V, E>
      *
      * @param vertexSet the vertex set V to be printed
      * @param edgeSet the edge set E to be printed
-     * @param directed true to use parens for each edge (representing directed); false to use curly
-     *        braces (representing undirected)
      *
      * @return a string representation of (V,E)
      */
     protected String toStringFromSets(
-        Collection<? extends V> vertexSet, Collection<? extends E> edgeSet, boolean directed)
+        Collection<? extends V> vertexSet, Collection<? extends E> edgeSet)
     {
         List<String> renderedEdges = new ArrayList<>();
 
@@ -177,19 +177,11 @@ public abstract class AbstractGraph<V, E>
                 sb.append(e.toString());
                 sb.append("=");
             }
-            if (directed) {
-                sb.append("(");
-            } else {
-                sb.append("{");
-            }
+            sb.append("{");
             sb.append(getEdgeSource(e));
             sb.append(",");
             sb.append(getEdgeTarget(e));
-            if (directed) {
-                sb.append(")");
-            } else {
-                sb.append("}");
-            }
+            sb.append("}");
 
             // REVIEW jvs 29-May-2006: dump weight somewhere?
             renderedEdges.add(sb.toString());

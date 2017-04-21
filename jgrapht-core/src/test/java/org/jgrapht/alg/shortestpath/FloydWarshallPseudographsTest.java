@@ -17,18 +17,24 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.Graphs;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.generate.GnpRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.IntegerVertexFactory;
+import org.jgrapht.graph.WeightedPseudograph;
+import org.junit.Test;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+import java.util.function.Supplier;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
-import org.junit.*;
+import static org.junit.Assert.*;
 
 /**
  * Test {@link FloydWarshallShortestPaths} on pseudo graphs.
@@ -48,7 +54,6 @@ public class FloydWarshallPseudographsTest
         Random rng = new Random();
 
         List<Supplier<Graph<Integer, DefaultWeightedEdge>>> graphs = new ArrayList<>();
-        graphs.add(() -> new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class));
         graphs.add(() -> new WeightedPseudograph<>(DefaultWeightedEdge.class));
 
         for (Supplier<Graph<Integer, DefaultWeightedEdge>> gSupplier : graphs) {
@@ -103,8 +108,8 @@ public class FloydWarshallPseudographsTest
     @Test
     public void test1()
     {
-        DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<Integer, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         Graphs.addAllVertices(g, Arrays.asList(1, 2, 3, 4));
         DefaultWeightedEdge e12_1 = g.addEdge(1, 2);
         g.setEdgeWeight(e12_1, -5.0);
@@ -128,93 +133,44 @@ public class FloydWarshallPseudographsTest
         FloydWarshallShortestPaths<Integer, DefaultWeightedEdge> fw =
             new FloydWarshallShortestPaths<>(g);
 
-        SingleSourcePaths<Integer, DefaultWeightedEdge> t1 = fw.getPaths(1);
-        assertEquals(0d, t1.getWeight(1), 1e-9);
-        assertTrue(t1.getPath(1).getEdgeList().isEmpty());
-        assertEquals(Arrays.asList(g.getEdgeSource(e12_1)), t1.getPath(1).getVertexList());
-        assertEquals(-5d, t1.getWeight(2), 1e-9);
-        assertEquals(Arrays.asList(e12_1), t1.getPath(2).getEdgeList());
-        assertEquals(-10d, t1.getWeight(3), 1e-9);
-        assertEquals(Arrays.asList(e12_1, e23_3), t1.getPath(3).getEdgeList());
-        assertEquals(-110d, t1.getWeight(4), 1e-9);
-        assertEquals(Arrays.asList(e12_1, e23_3, e34_1), t1.getPath(4).getEdgeList());
-
         SingleSourcePaths<Integer, DefaultWeightedEdge> t2 = fw.getPaths(2);
-        assertEquals(Double.POSITIVE_INFINITY, t2.getWeight(1), 1e-9);
-        assertNull(t2.getPath(1));
-        assertEquals(0d, t2.getWeight(2), 1e-9);
+        assertEquals(-345, t2.getWeight(1), 1e-9);
+        assertEquals(-350d, t2.getWeight(2), 1e-9);
         assertTrue(t2.getPath(2).getEdgeList().isEmpty());
         assertEquals(Arrays.asList(g.getEdgeSource(e23_1)), t2.getPath(2).getVertexList());
-        assertEquals(-5d, t2.getWeight(3), 1e-9);
-        assertEquals(Arrays.asList(e23_3), t2.getPath(3).getEdgeList());
-        assertEquals(-105d, t2.getWeight(4), 1e-9);
-        assertEquals(Arrays.asList(e23_3, e34_1), t2.getPath(4).getEdgeList());
+        assertEquals(-375d, t2.getWeight(3), 1e-9);
+        assertEquals(-575d, t2.getWeight(4), 1e-9);
 
         SingleSourcePaths<Integer, DefaultWeightedEdge> t3 = fw.getPaths(3);
-        assertEquals(Double.POSITIVE_INFINITY, t3.getWeight(1), 1e-9);
-        assertNull(t3.getPath(1));
-        assertEquals(Double.POSITIVE_INFINITY, t3.getWeight(2), 1e-9);
-        assertNull(t3.getPath(2));
-        assertEquals(0d, t3.getWeight(3), 1e-9);
+        assertEquals(-370, t3.getWeight(1), 1e-9);
+        assertEquals(-375, t3.getWeight(2), 1e-9);
+        assertEquals(-400, t3.getWeight(3), 1e-9);
         assertTrue(t3.getPath(3).getEdgeList().isEmpty());
-        assertEquals(-100d, t3.getWeight(4), 1e-9);
-        assertEquals(Arrays.asList(e34_1), t3.getPath(4).getEdgeList());
+        assertEquals(-600d, t3.getWeight(4), 1e-9);
 
         SingleSourcePaths<Integer, DefaultWeightedEdge> t4 = fw.getPaths(4);
-        assertNull(t4.getPath(1));
-        assertNull(t4.getPath(2));
-        assertNull(t4.getPath(3));
-        assertEquals(0d, t4.getWeight(4), 1e-9);
+        assertEquals(-800, t4.getWeight(4), 1e-9);
         assertTrue(t4.getPath(4).getEdgeList().isEmpty());
 
         // test diameter
-        assertEquals(Double.POSITIVE_INFINITY, fw.getDiameter(), 1e-9);
+        assertEquals(0d, fw.getDiameter(), 1e-9);
         // test shortest path count
-        assertEquals(6, fw.getShortestPathsCount());
+        assertEquals(12, fw.getShortestPathsCount());
 
         // test first hop
-        assertNull(fw.getFirstHop(1, 1));
         assertEquals(2, fw.getFirstHop(1, 2).intValue());
         assertEquals(2, fw.getFirstHop(1, 3).intValue());
         assertEquals(2, fw.getFirstHop(1, 4).intValue());
-        assertNull(fw.getFirstHop(2, 1));
-        assertNull(fw.getFirstHop(2, 2));
-        assertEquals(3, fw.getFirstHop(2, 3).intValue());
-        assertEquals(3, fw.getFirstHop(2, 4).intValue());
-        assertNull(fw.getFirstHop(3, 1));
-        assertNull(fw.getFirstHop(3, 2));
-        assertNull(fw.getFirstHop(3, 3));
-        assertEquals(4, fw.getFirstHop(3, 4).intValue());
-        assertNull(fw.getFirstHop(4, 1));
-        assertNull(fw.getFirstHop(4, 2));
-        assertNull(fw.getFirstHop(4, 3));
-        assertNull(fw.getFirstHop(4, 4));
-
-        // test last hop
-        assertNull(fw.getLastHop(1, 1));
-        assertEquals(1, fw.getLastHop(1, 2).intValue());
-        assertEquals(2, fw.getLastHop(1, 3).intValue());
-        assertEquals(3, fw.getLastHop(1, 4).intValue());
-        assertNull(fw.getLastHop(2, 1));
-        assertNull(fw.getLastHop(2, 2));
-        assertEquals(2, fw.getLastHop(2, 3).intValue());
-        assertEquals(3, fw.getLastHop(2, 4).intValue());
-        assertNull(fw.getLastHop(3, 1));
-        assertNull(fw.getLastHop(3, 2));
-        assertNull(fw.getLastHop(3, 3));
-        assertEquals(3, fw.getLastHop(3, 4).intValue());
-        assertNull(fw.getLastHop(4, 1));
-        assertNull(fw.getLastHop(4, 2));
-        assertNull(fw.getLastHop(4, 3));
-        assertNull(fw.getLastHop(4, 4));
-
+        assertEquals(1, fw.getFirstHop(2, 3).intValue());
+        assertEquals(1, fw.getFirstHop(2, 4).intValue());
+        assertEquals(2, fw.getFirstHop(3, 4).intValue());
     }
 
     @Test
     public void testGetPathWeight()
     {
-        DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<Integer, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         Graphs.addAllVertices(g, Arrays.asList(1, 2, 3, 4));
         DefaultWeightedEdge e12_1 = g.addEdge(1, 2);
         g.setEdgeWeight(e12_1, -5.0);
@@ -238,17 +194,17 @@ public class FloydWarshallPseudographsTest
         FloydWarshallShortestPaths<Integer, DefaultWeightedEdge> fw =
             new FloydWarshallShortestPaths<>(g);
 
-        assertEquals(Double.POSITIVE_INFINITY, fw.getPathWeight(2, 1), 1e-9);
-        assertEquals(0d, fw.getPathWeight(2, 2), 1e-9);
-        assertEquals(-5d, fw.getPathWeight(2, 3), 1e-9);
-        assertEquals(-105d, fw.getPathWeight(2, 4), 1e-9);
+        assertEquals(-345d, fw.getPathWeight(2, 1), 1e-9);
+        assertEquals(-350d, fw.getPathWeight(2, 2), 1e-9);
+        assertEquals(-375d, fw.getPathWeight(2, 3), 1e-9);
+        assertEquals(-575d, fw.getPathWeight(2, 4), 1e-9);
     }
 
     @Test
     public void testLoops()
     {
-        DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+        WeightedPseudograph<Integer, DefaultWeightedEdge> g =
+            new WeightedPseudograph<>(DefaultWeightedEdge.class);
         Graphs.addAllVertices(g, Arrays.asList(1, 2));
         DefaultWeightedEdge e12_1 = g.addEdge(1, 2);
         g.setEdgeWeight(e12_1, 5.0);
@@ -284,7 +240,7 @@ public class FloydWarshallPseudographsTest
         assertEquals(2, p2.getVertexList().get(0).intValue());
 
         assertEquals(5.0, fw.getPath(1, 2).getWeight(), 1e-9);
-        assertEquals(15.0, fw.getPath(2, 1).getWeight(), 1e-9);
+        assertEquals(5.0, fw.getPath(2, 1).getWeight(), 1e-9);
     }
 
 }

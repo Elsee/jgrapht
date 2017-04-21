@@ -17,10 +17,12 @@
  */
 package org.jgrapht.alg.isomorphism;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphMapping;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import java.util.*;
 
 public class SubgraphIsomorphismTestUtils
 {
@@ -87,7 +89,7 @@ public class SubgraphIsomorphismTestUtils
         Graph<Integer, DefaultEdge> g1, int vertexCount, long seed)
     {
         Map<Integer, Integer> map = new HashMap<>();
-        Graph<Integer, DefaultEdge> g2 = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g2 = new SimpleGraph<>(DefaultEdge.class);
         Set<Integer> vertexSet = g1.vertexSet();
         int n = vertexSet.size();
 
@@ -119,7 +121,7 @@ public class SubgraphIsomorphismTestUtils
         int vertexCount, int edgeCount, long seed)
     {
         Integer[] vertexes = new Integer[vertexCount];
-        Graph<Integer, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
 
         for (int i = 0; i < vertexCount; i++)
             g.addVertex(vertexes[i] = i);

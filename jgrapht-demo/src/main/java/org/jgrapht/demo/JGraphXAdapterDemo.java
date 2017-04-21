@@ -17,16 +17,16 @@
  */
 package org.jgrapht.demo;
 
-import java.awt.*;
+import com.mxgraph.layout.mxCircleLayout;
+import com.mxgraph.swing.mxGraphComponent;
+import org.jgrapht.ListenableGraph;
+import org.jgrapht.ext.JGraphXAdapter;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultListenableGraph;
+import org.jgrapht.graph.SimpleGraph;
 
 import javax.swing.*;
-
-import org.jgrapht.*;
-import org.jgrapht.ext.*;
-import org.jgrapht.graph.*;
-
-import com.mxgraph.layout.*;
-import com.mxgraph.swing.*;
+import java.awt.*;
 
 /**
  * A demo applet that shows how to use JGraphX to visualize JGraphT graphs. Applet based on
@@ -69,7 +69,7 @@ public class JGraphXAdapterDemo
     {
         // create a JGraphT graph
         ListenableGraph<String, DefaultEdge> g =
-            new DefaultListenableGraph<>(new DefaultDirectedGraph<>(DefaultEdge.class));
+            new DefaultListenableGraph<>(new SimpleGraph<>(DefaultEdge.class));
 
         // create a visualization using JGraph, via an adapter
         jgxAdapter = new JGraphXAdapter<>(g);

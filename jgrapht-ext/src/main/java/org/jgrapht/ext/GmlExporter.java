@@ -17,14 +17,13 @@
  */
 package org.jgrapht.ext;
 
+import org.jgrapht.Graph;
+import org.jgrapht.WeightedGraph;
+
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.jgrapht.DirectedGraph;
-import org.jgrapht.Graph;
-import org.jgrapht.WeightedGraph;
 
 /**
  * Exports a graph into a GML file (Graph Modeling Language).
@@ -190,11 +189,6 @@ public class GmlExporter<V, E>
         out.println("graph");
         out.println("[");
         out.println(TAB1 + "label" + DELIM + quoted(""));
-        if (g instanceof DirectedGraph<?, ?>) {
-            out.println(TAB1 + "directed" + DELIM + "1");
-        } else {
-            out.println(TAB1 + "directed" + DELIM + "0");
-        }
         exportVertices(out, g);
         exportEdges(out, g);
         out.println("]");

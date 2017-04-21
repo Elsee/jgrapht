@@ -40,11 +40,11 @@ public abstract class AbstractGraphIteratorTest
     /**
      * .
      */
-    public void testDirectedGraph()
+    public void testUndirectedGraph()
     {
         result = new StringBuffer();
 
-        Graph<String, DefaultWeightedEdge> graph = createDirectedGraph();
+        Graph<String, DefaultWeightedEdge> graph = createUndirectedGraph();
 
         AbstractGraphIterator<String, DefaultWeightedEdge> iterator = createIterator(graph, "1");
         MyTraversalListener<DefaultWeightedEdge> listener = new MyTraversalListener<>();
@@ -59,8 +59,6 @@ public abstract class AbstractGraphIteratorTest
         }
 
         assertEquals(getExpectedStr2(), result.toString());
-
-        assertEquals(getExpectedFinishString(), listener.getFinishString());
     }
 
     abstract String getExpectedStr1();
@@ -72,10 +70,10 @@ public abstract class AbstractGraphIteratorTest
         return "";
     }
 
-    Graph<String, DefaultWeightedEdge> createDirectedGraph()
+    Graph<String, DefaultWeightedEdge> createUndirectedGraph()
     {
         Graph<String, DefaultWeightedEdge> graph =
-            new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
+            new SimpleWeightedGraph<>(DefaultWeightedEdge.class);
 
         //
         String v1 = "1";
@@ -110,11 +108,8 @@ public abstract class AbstractGraphIteratorTest
         Graphs.addEdge(graph, v3, v6, 100);
         graph.addEdge(v5, v6);
         Graphs.addEdge(graph, v5, v7, 200);
-        graph.addEdge(v6, v1);
         Graphs.addEdge(graph, v7, v8, 100);
         graph.addEdge(v7, v9);
-        graph.addEdge(v8, v2);
-        graph.addEdge(v9, v4);
 
         return graph;
     }

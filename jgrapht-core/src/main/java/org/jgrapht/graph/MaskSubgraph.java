@@ -17,11 +17,16 @@
  */
 package org.jgrapht.graph;
 
-import java.io.Serializable;
-import java.util.*;
-import java.util.function.*;
+import org.jgrapht.EdgeFactory;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphType;
 
-import org.jgrapht.*;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * An unmodifiable subgraph induced by a vertex/edge masking function. The subgraph will keep track
@@ -145,20 +150,16 @@ public class MaskSubgraph<V, E>
     @Override
     public int degreeOf(V vertex)
     {
-        if (baseType.isDirected()) {
-            return inDegreeOf(vertex) + outDegreeOf(vertex);
-        } else {
-            int degree = 0;
-            Iterator<E> it = edgesOf(vertex).iterator();
-            while (it.hasNext()) {
-                E e = it.next();
+        int degree = 0;
+        Iterator<E> it = edgesOf(vertex).iterator();
+        while (it.hasNext()) {
+            E e = it.next();
+            degree++;
+            if (getEdgeSource(e).equals(getEdgeTarget(e))) {
                 degree++;
-                if (getEdgeSource(e).equals(getEdgeTarget(e))) {
-                    degree++;
-                }
             }
-            return degree;
         }
+        return degree;
     }
 
     /**

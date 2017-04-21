@@ -20,7 +20,7 @@ package org.jgrapht.graph;
 import org.jgrapht.*;
 
 /**
- * A unit test for the AsUnweighted[Directed]Graph views.
+ * A unit test for the AsUnweightedGraph views.
  *
  * @author John V. Sichi
  */
@@ -41,22 +41,6 @@ public class AsUnweightedGraphTest
     public AsUnweightedGraphTest(String name)
     {
         super(name);
-    }
-
-    // ~ Methods ----------------------------------------------------------------
-
-    /**
-     * .
-     */
-    public void testDirected()
-    {
-        DefaultDirectedWeightedGraph<String, DefaultWeightedEdge> directed =
-            new DefaultDirectedWeightedGraph<>(DefaultWeightedEdge.class);
-        constructWeighted(directed);
-
-        Graph<String, DefaultWeightedEdge> unweighted =
-            new AsUnweightedGraph<>(directed);
-        checkView(directed, unweighted);
     }
 
     /**

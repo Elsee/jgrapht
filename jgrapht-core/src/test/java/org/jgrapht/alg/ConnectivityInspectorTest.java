@@ -17,10 +17,9 @@
  */
 package org.jgrapht.alg;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-
-import junit.framework.*;
+import junit.framework.TestCase;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.Pseudograph;
 
 /**
  * .
@@ -88,29 +87,6 @@ public class ConnectivityInspectorTest
         assertEquals(6, g.edgeSet().size());
 
         return g;
-    }
-
-    /**
-     * .
-     */
-    public void testDirectedGraph()
-    {
-        ListenableGraph<String, DefaultEdge> g =
-            new DefaultListenableGraph<>(new DefaultDirectedGraph<>(DefaultEdge.class));
-        g.addVertex(V1);
-        g.addVertex(V2);
-        g.addVertex(V3);
-
-        g.addEdge(V1, V2);
-
-        ConnectivityInspector<String, DefaultEdge> inspector = new ConnectivityInspector<>(g);
-        g.addGraphListener(inspector);
-
-        assertEquals(false, inspector.isGraphConnected());
-
-        g.addEdge(V1, V3);
-
-        assertEquals(true, inspector.isGraphConnected());
     }
 
     /**

@@ -17,16 +17,19 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphTests;
+import org.jgrapht.VertexFactory;
 
-import org.jgrapht.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Generates a complete graph of any size.
  * 
  * <p>
- * A complete graph is a graph where every vertex shares an edge with every other vertex. If it is a
- * directed graph, then edges must always exist in both directions.
+ * A complete graph is a graph where every vertex shares an edge with every other vertex.
  * 
  * @param <V> the graph vertex type
  * @param <E> the graph edge type
@@ -66,10 +69,9 @@ public class CompleteGraphGenerator<V, E>
         }
 
         /*
-         * Ensure directed or undirected
+         * Ensure undirected
          */
-        GraphTests.requireDirectedOrUndirected(target);
-        boolean isDirected = target.getType().isDirected();
+        GraphTests.requireUndirected(target);
 
         /*
          * Add vertices
@@ -91,9 +93,6 @@ public class CompleteGraphGenerator<V, E>
                 V v = nodes.get(i);
                 V u = nodes.get(j);
                 target.addEdge(v, u);
-                if (isDirected) {
-                    target.addEdge(u, v);
-                }
             }
         }
     }

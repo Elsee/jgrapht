@@ -17,16 +17,16 @@
  */
 package org.jgrapht.alg.matching;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.MatchingAlgorithm;
+import org.jgrapht.alg.util.ToleranceDoubleComparator;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.util.*;
+import java.util.*;
 
 /**
  * The greedy algorithm for computing a maximum weight matching in an arbitrary graph. The algorithm
  * is a 1/2-approximation algorithm and runs in O(n + m log n) where n is the number of vertices and
- * m is the number of edges of the graph. This implementation accepts directed and undirected graphs
+ * m is the number of edges of the graph. This implementation accepts undirected graphs
  * which may contain self-loops and multiple edges. There is no assumption on the edge weights, i.e.
  * they can also be negative or zero.
  * 

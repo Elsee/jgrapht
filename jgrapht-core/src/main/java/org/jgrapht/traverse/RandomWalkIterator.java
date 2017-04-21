@@ -18,17 +18,18 @@
 
 package org.jgrapht.traverse;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.event.EdgeTraversalEvent;
+import org.jgrapht.event.VertexTraversalEvent;
 
-import org.jgrapht.*;
-import org.jgrapht.event.*;
+import java.util.*;
 
 /**
  * 
  * A <a href="https://en.wikipedia.org/wiki/Random_walk#Random_walk_on_graphs">random-walk</a>
- * iterator for a directed and an undirected graph. At each step selected a randomly (uniformly
- * distributed) edge out of the current vertex edges (in case of directed graph - from the outgoing
- * edges), and follows it to the next vertex.
+ * iterator for an undirected graph. At each step selected a randomly (uniformly
+ * distributed) edge out of the current vertex edges, and follows it to the next vertex.
  * 
  * In case a weighted walk is desired (and in case the graph is weighted), edges are selected with
  * probability respective to its weight (out of the total weight of the edges).

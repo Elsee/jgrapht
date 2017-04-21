@@ -17,12 +17,13 @@
  */
 package org.jgrapht.ext;
 
-import java.io.*;
-import java.util.*;
-import java.util.stream.*;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.AbstractBaseGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Imports a graph from a DOT file.
@@ -308,18 +309,7 @@ public class DOTImporter<V, E>
 
             if (headerParts.length <= i) {
                 throw new ImportException("Malformed header: " + sectionBuffer.toString());
-            } else if ((graph instanceof DirectedGraph)
-                && headerParts[i].toLowerCase().equals(DOTUtils.UNDIRECTED_GRAPH_KEYWORD))
-            {
-                throw new ImportException(
-                    "input asks for undirected graph and directed graph provided.");
-            } else if (!(graph instanceof DirectedGraph)
-                && headerParts[i].equals(DOTUtils.DIRECTED_GRAPH_KEYWORD))
-            {
-                throw new ImportException(
-                    "input asks for directed graph but undirected graph provided.");
-            } else if (!headerParts[i].toLowerCase().equals(DOTUtils.UNDIRECTED_GRAPH_KEYWORD)
-                && !headerParts[i].toLowerCase().equals(DOTUtils.DIRECTED_GRAPH_KEYWORD))
+            } else if (!headerParts[i].toLowerCase().equals(DOTUtils.UNDIRECTED_GRAPH_KEYWORD))
             {
                 throw new ImportException("unknown graph type: " + headerParts[i]);
             }
@@ -399,11 +389,7 @@ public class DOTImporter<V, E>
         if (position < (input.length() - 1)) {
             char next = input.charAt(position + 1);
             if (current == '-') {
-                if ((next == '-') && (graph instanceof DirectedGraph)) {
-                    throw new ImportException("graph is directed but undirected edge found");
-                } else if ((next == '>') && !(graph instanceof DirectedGraph)) {
-                    throw new ImportException("graph is undirected but directed edge found");
-                } else if ((next == '-') || (next == '>')) {
+                if ((next == '-') || (next == '>')) {
                     return EDGE;
                 }
             }
@@ -652,8 +638,7 @@ public class DOTImporter<V, E>
                 chunk = idChunk.substring(index);
                 index = idChunk.length() + 1;
             }
-            if (!chunk.equals(DOTUtils.UNDIRECTED_GRAPH_EDGEOP)
-                && !chunk.equals(DOTUtils.DIRECTED_GRAPH_EDGEOP))
+            if (!chunk.equals(DOTUtils.UNDIRECTED_GRAPH_EDGEOP))
             { // a label then?
                 ids.add(chunk);
             }

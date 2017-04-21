@@ -18,11 +18,14 @@
 
 package org.jgrapht.traverse;
 
-import java.util.*;
+import org.jgrapht.EnhancedTestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.generate.RingGraphGenerator;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
+import java.util.Iterator;
 
 /**
  * Tests for the {@link RandomWalkIterator} class.
@@ -39,7 +42,7 @@ public class RandomWalkIteratorTest
      */
     public void testEmptyGraph()
     {
-        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
         Iterator<String> iter = new RandomWalkIterator<>(graph);
         assertFalse(iter.hasNext());
     }
@@ -49,38 +52,11 @@ public class RandomWalkIteratorTest
      */
     public void testSingleNode()
     {
-        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
         graph.addVertex("123");
         Iterator<String> iter = new RandomWalkIterator<>(graph);
         assertTrue(iter.hasNext());
         assertEquals("123", iter.next());
-        assertFalse(iter.hasNext());
-    }
-
-    /**
-     * Tests iterator does not have more elements after reaching sink vertex.
-     */
-    public void testSink()
-    {
-        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        int graphSize = 10;
-        LinearGraphGenerator<String, DefaultEdge> graphGenerator =
-            new LinearGraphGenerator<>(graphSize);
-        graphGenerator.generateGraph(graph, new VertexFactory<String>()
-        {
-            private int index = 1;
-
-            @Override
-            public String createVertex()
-            {
-                return String.valueOf(index++);
-            }
-        }, null);
-        Iterator<String> iter = new RandomWalkIterator<>(graph);
-        for (int i = 0; i < graphSize; i++) {
-            assertTrue(iter.hasNext());
-            assertNotNull(iter.next());
-        }
         assertFalse(iter.hasNext());
     }
 
@@ -109,32 +85,6 @@ public class RandomWalkIteratorTest
             assertNotNull(iter.next());
         }
         assertFalse(iter.hasNext());
-    }
-
-    /**
-     * Test deterministic walk using directed ring graph.
-     */
-    public void testDeterministic()
-    {
-        Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
-        int ringSize = 5;
-        RingGraphGenerator<String, DefaultEdge> graphGenerator = new RingGraphGenerator<>(ringSize);
-        graphGenerator.generateGraph(graph, new VertexFactory<String>()
-        {
-            private int index = 0;
-
-            @Override
-            public String createVertex()
-            {
-                return String.valueOf(index++);
-            }
-        }, null);
-        Iterator<String> iter = new RandomWalkIterator<>(graph, "0", false, 20);
-        int step = 0;
-        while (iter.hasNext()) {
-            step++;
-            assertEquals(String.valueOf(step % ringSize), iter.next());
-        }
     }
 
 }

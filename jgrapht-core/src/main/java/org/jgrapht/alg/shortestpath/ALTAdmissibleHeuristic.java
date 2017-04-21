@@ -17,13 +17,12 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.alg.util.ToleranceDoubleComparator;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.graph.*;
+import java.util.*;
 
 /**
  * An admissible heuristic for the A* algorithm using a set of landmarks and the triangle
@@ -73,7 +72,6 @@ public class ALTAdmissibleHeuristic<V, E>
     private final Comparator<Double> comparator;
     private final Map<V, Map<V, Double>> fromLandmark;
     private final Map<V, Map<V, Double>> toLandmark;
-    private final boolean directed;
 
     /**
      * Constructs a new {@link AStarAdmissibleHeuristic} using a set of landmarks.
@@ -92,14 +90,10 @@ public class ALTAdmissibleHeuristic<V, E>
             throw new IllegalArgumentException("At least one landmark must be provided");
         }
         this.fromLandmark = new HashMap<>();
-        if (graph.getType().isDirected()) {
-            this.directed = true;
-            this.toLandmark = new HashMap<>();
-        } else if (graph.getType().isUndirected()) {
-            this.directed = false;
+        if (graph.getType().isUndirected()) {
             this.toLandmark = this.fromLandmark;
         } else {
-            throw new IllegalArgumentException("Graph must be directed or undirected");
+            throw new IllegalArgumentException("Graph must be undirected");
         }
         this.comparator = new ToleranceDoubleComparator();
 
@@ -155,12 +149,8 @@ public class ALTAdmissibleHeuristic<V, E>
         for (V l : fromLandmark.keySet()) {
             double estimate;
             Map<V, Double> from = fromLandmark.get(l);
-            if (directed) {
-                Map<V, Double> to = toLandmark.get(l);
-                estimate = Math.max(to.get(u) - to.get(t), from.get(t) - from.get(u));
-            } else {
-                estimate = Math.abs(from.get(u) - from.get(t));
-            }
+            estimate = Math.abs(from.get(u) - from.get(t));
+
 
             // max over all landmarks
             if (Double.isFinite(estimate)) {
@@ -186,18 +176,6 @@ public class ALTAdmissibleHeuristic<V, E>
             fromLandMarkDistances.put(v, fromLandmarkPaths.getWeight(v));
         }
         fromLandmark.put(landmark, fromLandMarkDistances);
-
-        // compute distances to landmark (using reverse graph)
-        if (directed) {
-            Graph<V, E> reverseGraph = new EdgeReversedGraph<>(graph);
-            SingleSourcePaths<V, E> toLandmarkPaths =
-                new DijkstraShortestPath<>(reverseGraph).getPaths(landmark);
-            Map<V, Double> toLandMarkDistances = new HashMap<>();
-            for (V v : graph.vertexSet()) {
-                toLandMarkDistances.put(v, toLandmarkPaths.getWeight(v));
-            }
-            toLandmark.put(landmark, toLandMarkDistances);
-        }
     }
 
 }

@@ -17,18 +17,17 @@
  */
 package org.jgrapht.alg.scoring;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-
 import org.jgrapht.Graph;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
 import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
 import org.jgrapht.alg.interfaces.VertexScoringAlgorithm;
 import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
 import org.jgrapht.alg.shortestpath.FloydWarshallShortestPaths;
-import org.jgrapht.graph.EdgeReversedGraph;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Closeness centrality.
@@ -148,11 +147,7 @@ public class ClosenessCentrality<V, E>
     {
         // setup graph
         Graph<V, E> g;
-        if (incoming && graph.getType().isDirected()) {
-            g = new EdgeReversedGraph<>(graph);
-        } else {
-            g = graph;
-        }
+        g = graph;
 
         // test if we can use Dijkstra
         boolean noNegativeWeights = true;

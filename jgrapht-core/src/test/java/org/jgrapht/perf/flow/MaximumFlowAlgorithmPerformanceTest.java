@@ -17,18 +17,24 @@
  */
 package org.jgrapht.perf.flow;
 
-import java.util.concurrent.*;
-
-import org.jgrapht.*;
-import org.jgrapht.alg.flow.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.flow.EdmondsKarpMFImpl;
+import org.jgrapht.alg.flow.PushRelabelMFImpl;
+import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
+import org.jgrapht.generate.GnmRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.IntegerVertexFactory;
+import org.jgrapht.graph.SimpleWeightedGraph;
 import org.openjdk.jmh.annotations.*;
-import org.openjdk.jmh.runner.*;
-import org.openjdk.jmh.runner.options.*;
+import org.openjdk.jmh.runner.Runner;
+import org.openjdk.jmh.runner.RunnerException;
+import org.openjdk.jmh.runner.options.Options;
+import org.openjdk.jmh.runner.options.OptionsBuilder;
+import org.openjdk.jmh.runner.options.TimeValue;
 
-import junit.framework.*;
+import java.util.concurrent.TimeUnit;
 
 public class MaximumFlowAlgorithmPerformanceTest
     extends TestCase
@@ -58,8 +64,8 @@ public class MaximumFlowAlgorithmPerformanceTest
                 new GnmRandomGraphGenerator<>(
                     PERF_BENCHMARK_VERTICES_COUNT, PERF_BENCHMARK_EDGES_COUNT, SEED);
 
-            SimpleDirectedWeightedGraph<Integer, DefaultWeightedEdge> network =
-                new SimpleDirectedWeightedGraph<>((sourceVertex, targetVertex) -> {
+            SimpleWeightedGraph<Integer, DefaultWeightedEdge> network =
+                new SimpleWeightedGraph<>((sourceVertex, targetVertex) -> {
                     return new DefaultWeightedEdge();
                 });
 

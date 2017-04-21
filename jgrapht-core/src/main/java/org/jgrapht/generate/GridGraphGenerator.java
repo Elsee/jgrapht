@@ -17,9 +17,11 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
 
-import org.jgrapht.*;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Generates a bidirectional <a href="http://mathworld.wolfram.com/GridGraph.html">grid graph</a> of
@@ -92,8 +94,7 @@ public class GridGraphGenerator<V, E>
         // Iterating twice over the key set, for undirected graph edges are
         // added from upper vertices to lower, and from left to right. The
         // second addEdge call will return nothing; it will not add a the edge
-        // at the opposite direction. For directed graph, edges in opposite
-        // direction are also added.
+        // at the opposite direction.
         for (int i : map.keySet()) {
             for (int j : map.keySet()) {
                 if ((((i % cols) > 0) && ((i + 1) == j)) || ((i + cols) == j)) {

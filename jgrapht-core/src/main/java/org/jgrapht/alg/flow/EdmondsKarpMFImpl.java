@@ -17,18 +17,12 @@
  */
 package org.jgrapht.alg.flow;
 
+import org.jgrapht.Graph;
+import org.jgrapht.alg.util.extension.ExtensionFactory;
+
 import java.util.*;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.util.extension.*;
-
 /**
- * A <a href = "http://en.wikipedia.org/wiki/Flow_network">flow network</a> is a directed graph
- * where each edge has a capacity and each edge receives a flow. The amount of flow on an edge can
- * not exceed the capacity of the edge (note, that all capacities must be non-negative). A flow must
- * satisfy the restriction that the amount of flow into a vertex equals the amount of flow out of
- * it, except when it is a source, which "produces" flow, or sink, which "consumes" flow.
- *
  * <p>
  * This class computes maximum flow in a network using
  * <a href = "http://en.wikipedia.org/wiki/Edmonds-Karp_algorithm">Edmonds-Karp algorithm</a>. Be
@@ -43,8 +37,8 @@ import org.jgrapht.alg.util.extension.*;
  * <p>
  * For more details see Andrew V. Goldberg's <i>Combinatorial Optimization (Lecture Notes)</i>.
  *
- * Note: even though the algorithm accepts any kind of graph, currently only Simple directed and
- * undirected graphs are supported (and tested!).
+ * Note: even though the algorithm accepts any kind of graph, currently only Simple undirected graphs
+ * are supported (and tested!).
  *
  * @param <V> the graph vertex type
  * @param <E> the graph edge type

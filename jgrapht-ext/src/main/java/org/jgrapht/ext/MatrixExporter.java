@@ -25,7 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.Graph;
 import org.jgrapht.Graphs;
 import org.jgrapht.UndirectedGraph;
@@ -173,15 +172,8 @@ public class MatrixExporter<V, E>
 
         PrintWriter out = new PrintWriter(writer);
 
-        if (g instanceof DirectedGraph<?, ?>) {
-            for (V from : g.vertexSet()) {
-                exportAdjacencyMatrixVertex(
-                    out, from, Graphs.successorListOf((DirectedGraph<V, E>) g, from));
-            }
-        } else {
-            for (V from : g.vertexSet()) {
-                exportAdjacencyMatrixVertex(out, from, Graphs.neighborListOf(g, from));
-            }
+        for (V from : g.vertexSet()) {
+            exportAdjacencyMatrixVertex(out, from, Graphs.neighborListOf(g, from));
         }
 
         out.flush();

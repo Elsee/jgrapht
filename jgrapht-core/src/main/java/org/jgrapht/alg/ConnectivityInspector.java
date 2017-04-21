@@ -17,18 +17,16 @@
  */
 package org.jgrapht.alg;
 
-import java.util.*;
-
-import org.jgrapht.*;
+import org.jgrapht.Graph;
 import org.jgrapht.event.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.traverse.*;
+import org.jgrapht.traverse.BreadthFirstIterator;
+
+import java.util.*;
 
 /**
  * Allows obtaining various connectivity aspects of a graph. The <i>inspected graph</i> is specified
  * at construction time and cannot be modified. Currently, the inspector supports connected
- * components for an undirected graph and weakly connected components for a directed graph. To find
- * strongly connected components, use {@link KosarajuStrongConnectivityInspector} instead.
+ * components for an undirected graph.
  *
  * <p>
  * The inspector methods work in a lazy fashion: no computation is performed unless immediately
@@ -53,8 +51,8 @@ import org.jgrapht.traverse.*;
 public class ConnectivityInspector<V, E>
     implements GraphListener<V, E>
 {
-    private static final String GRAPH_MUST_BE_DIRECTED_OR_UNDIRECTED =
-        "Graph must be directed or undirected";
+    private static final String GRAPH_MUST_BE_UNDIRECTED =
+        "Graph must be undirected";
 
     private List<Set<V>> connectedSets;
     private Map<V, Set<V>> vertexToConnectedSet;
@@ -68,12 +66,10 @@ public class ConnectivityInspector<V, E>
     public ConnectivityInspector(Graph<V, E> g)
     {
         init();
-        if (g.getType().isDirected()) {
-            this.graph = new AsUndirectedGraph<>(g);
-        } else if (g.getType().isUndirected()) {
+        if (g.getType().isUndirected()) {
             this.graph = g;
         } else {
-            throw new IllegalArgumentException(GRAPH_MUST_BE_DIRECTED_OR_UNDIRECTED);
+            throw new IllegalArgumentException(GRAPH_MUST_BE_UNDIRECTED);
         }
     }
 
@@ -154,11 +150,6 @@ public class ConnectivityInspector<V, E>
 
     /**
      * Tests if there is a path from the specified source vertex to the specified target vertices.
-     * For a directed graph, direction is ignored for this interpretation of path.
-     *
-     * <p>
-     * Note: Future versions of this method might not ignore edge directions for directed graphs.
-     * </p>
      *
      * @param sourceVertex one end of the path.
      * @param targetVertex another end of the path.
@@ -168,10 +159,6 @@ public class ConnectivityInspector<V, E>
      */
     public boolean pathExists(V sourceVertex, V targetVertex)
     {
-        /*
-         * TODO: Ignoring edge direction for directed graph may be confusing. For directed graphs,
-         * consider Dijkstra's algorithm.
-         */
         Set<V> sourceSet = connectedSetOf(sourceVertex);
 
         return sourceSet.contains(targetVertex);

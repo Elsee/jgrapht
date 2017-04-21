@@ -17,11 +17,13 @@
  */
 package org.jgrapht.io;
 
-import java.io.*;
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.Graphs;
+import org.jgrapht.util.ModifiableInteger;
 
-import org.jgrapht.*;
-import org.jgrapht.util.*;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.*;
 
 /**
  * Exports a graph to a plain text matrix format, which can be processed by matrix manipulation
@@ -160,14 +162,8 @@ public class MatrixExporter<V, E>
 
         PrintWriter out = new PrintWriter(writer);
 
-        if (g.getType().isDirected()) {
-            for (V from : g.vertexSet()) {
-                exportAdjacencyMatrixVertex(out, from, Graphs.successorListOf(g, from));
-            }
-        } else {
-            for (V from : g.vertexSet()) {
-                exportAdjacencyMatrixVertex(out, from, Graphs.neighborListOf(g, from));
-            }
+        for (V from : g.vertexSet()) {
+            exportAdjacencyMatrixVertex(out, from, Graphs.neighborListOf(g, from));
         }
 
         out.flush();

@@ -17,21 +17,16 @@
  */
 package org.jgrapht.alg.shortestpath;
 
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.alg.util.ToleranceDoubleComparator;
+import org.jgrapht.graph.ClassBasedVertexFactory;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-
-import org.jgrapht.Graph;
-import org.jgrapht.GraphPath;
-import org.jgrapht.GraphTests;
-import org.jgrapht.VertexFactory;
-import org.jgrapht.alg.util.Pair;
-import org.jgrapht.alg.util.ToleranceDoubleComparator;
-import org.jgrapht.graph.AsGraphUnion;
-import org.jgrapht.graph.AsWeightedGraph;
-import org.jgrapht.graph.ClassBasedVertexFactory;
-import org.jgrapht.graph.DirectedPseudograph;
 
 /**
  * Johnson's all pairs shortest paths algorithm.
@@ -144,13 +139,8 @@ public class JohnsonShortestPaths<V, E>
         if (paths != null) {
             return;
         }
-        GraphTests.requireDirectedOrUndirected(graph);
 
-        if (graph.getType().isDirected()) {
-            runDirected(graph);
-        } else {
-            runUndirected(graph);
-        }
+        runUndirected(graph);
     }
 
     /**
@@ -178,107 +168,6 @@ public class JohnsonShortestPaths<V, E>
         for (V v : g.vertexSet()) {
             paths.put(v, dijkstraAlg.getPaths(v));
         }
-    }
-
-    /**
-     * Executes the algorithm for directed graphs.
-     * 
-     * @param g the input graph
-     */
-    private void runDirected(Graph<V, E> g)
-    {
-        /*
-         * Compute vertex weights using Bellman-Ford
-         */
-        Map<V, Double> vertexWeights = computeVertexWeights(g);
-
-        /*
-         * Compute new non-negative edge weights
-         */
-        Map<E, Double> newEdgeWeights = new HashMap<>();
-        for (E e : g.edgeSet()) {
-            V u = g.getEdgeSource(e);
-            V v = g.getEdgeTarget(e);
-            double weight = g.getEdgeWeight(e);
-            newEdgeWeights.put(e, weight + vertexWeights.get(u) - vertexWeights.get(v));
-        }
-
-        /*
-         * Create graph with new edge weights
-         */
-        Graph<V, E> newEdgeWeightsGraph = new AsWeightedGraph<>(g, newEdgeWeights);
-
-        /*
-         * Run Dijkstra using new weights for all vertices
-         */
-        paths = new HashMap<>();
-        for (V v : g.vertexSet()) {
-            // execute Dijkstra
-            DijkstraClosestFirstIterator<V, E> it = new DijkstraClosestFirstIterator<>(
-                newEdgeWeightsGraph, v, Double.POSITIVE_INFINITY);
-            while (it.hasNext()) {
-                it.next();
-            }
-            Map<V, Pair<Double, E>> distanceAndPredecessorMap = it.getDistanceAndPredecessorMap();
-
-            // transform distances to original weights
-            Map<V, Pair<Double, E>> newDistanceAndPredecessorMap = new HashMap<>();
-            for (V u : g.vertexSet()) {
-                Pair<Double, E> oldPair = distanceAndPredecessorMap.get(u);
-                Pair<Double, E> newPair = Pair.of(
-                    oldPair.getFirst() - vertexWeights.get(v) + vertexWeights.get(u),
-                    oldPair.getSecond());
-                newDistanceAndPredecessorMap.put(u, newPair);
-            }
-
-            // store shortest path tree
-            paths.put(v, new TreeSingleSourcePathsImpl<>(g, v, newDistanceAndPredecessorMap));
-        }
-
-    }
-
-    /**
-     * Compute vertex weights for edge re-weighting using Bellman-Ford.
-     * 
-     * @param g the input graph
-     * @return the vertex weights
-     */
-    private Map<V, Double> computeVertexWeights(Graph<V, E> g)
-    {
-        GraphTests.requireDirected(g);
-
-        // create extra graph
-        Graph<V, E> extraGraph = new DirectedPseudograph<>(graph.getEdgeFactory());
-
-        // add new vertex
-        V s = vertexFactory.createVertex();
-        if (g.containsVertex(s)) {
-            throw new IllegalArgumentException("Invalid vertex factory");
-        }
-        extraGraph.addVertex(s);
-
-        // add new edges with zero weight
-        Map<E, Double> zeroWeightFunction = new HashMap<>();
-        for (V v : g.vertexSet()) {
-            extraGraph.addVertex(v);
-            zeroWeightFunction.put(extraGraph.addEdge(s, v), 0d);
-        }
-
-        /*
-         * Union extra and input graph
-         */
-        Graph<V, E> unionGraph =
-            new AsGraphUnion<>(new AsWeightedGraph<>(extraGraph, zeroWeightFunction), g);
-
-        /*
-         * Run Bellman-Ford from new vertex
-         */
-        SingleSourcePaths<V, E> paths = new BellmanFordShortestPath<>(unionGraph).getPaths(s);
-        Map<V, Double> weights = new HashMap<>();
-        for (V v : g.vertexSet()) {
-            weights.put(v, paths.getWeight(v));
-        }
-        return weights;
     }
 
 }

@@ -17,20 +17,26 @@
  */
 package org.jgrapht.perf.shortestpath;
 
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.shortestpath.ALTAdmissibleHeuristic;
+import org.jgrapht.alg.shortestpath.AStarShortestPath;
+import org.jgrapht.alg.shortestpath.BidirectionalDijkstraShortestPath;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.generate.GnpRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.IntegerVertexFactory;
+import org.jgrapht.graph.WeightedPseudograph;
+import org.jgrapht.traverse.ClosestFirstIterator;
+import org.jgrapht.util.StopWatch;
+import org.openjdk.jmh.runner.RunnerException;
+
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
-
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.shortestpath.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.traverse.*;
-import org.jgrapht.util.*;
-import org.openjdk.jmh.runner.*;
-
-import junit.framework.*;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 /**
  * A small benchmark comparing Dijkstra like algorithms. The benchmark creates a random graph and
@@ -64,8 +70,8 @@ public class DijkstraShortestPathPerformanceTest
                     PERF_BENCHMARK_VERTICES_COUNT, PERF_BENCHMARK_EDGES_PROP, rng, false);
             }
 
-            DirectedWeightedPseudograph<Integer, DefaultWeightedEdge> weightedGraph =
-                new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
+            WeightedPseudograph<Integer, DefaultWeightedEdge> weightedGraph =
+                new WeightedPseudograph<>(DefaultWeightedEdge.class);
             this.graph = weightedGraph;
 
             generator.generateGraph(graph, new IntegerVertexFactory(), null);

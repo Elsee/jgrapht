@@ -17,10 +17,13 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.graph.AbstractBaseGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Create a random graph based on the G(n, p) Erdős–Rényi model. See the Wikipedia article for
@@ -157,9 +160,6 @@ public class GnpRandomGraphGenerator<V, E>
                 "Vertex factory did not produce " + n + " distinct vertices.");
         }
 
-        // check if graph is directed
-        boolean isDirected = target.getType().isDirected();
-
         // create edges
         for (int i = 0; i < n; i++) {
             for (int j = i; j < n; j++) {
@@ -176,13 +176,6 @@ public class GnpRandomGraphGenerator<V, E>
                 // s->t
                 if (rng.nextDouble() < p) {
                     target.addEdge(s, t);
-                }
-
-                if (isDirected) {
-                    // t->s
-                    if (rng.nextDouble() < p) {
-                        target.addEdge(t, s);
-                    }
                 }
             }
         }

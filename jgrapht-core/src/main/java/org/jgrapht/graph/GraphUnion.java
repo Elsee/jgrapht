@@ -17,11 +17,16 @@
  */
 package org.jgrapht.graph;
 
-import java.io.*;
-import java.util.*;
+import org.jgrapht.EdgeFactory;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphType;
+import org.jgrapht.util.WeightCombiner;
 
-import org.jgrapht.*;
-import org.jgrapht.util.*;
+import java.io.Serializable;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * <p>
@@ -275,10 +280,7 @@ public class GraphUnion<V, E, G extends Graph<V, E>>
     {
         GraphType type1 = g1.getType();
         GraphType type2 = g2.getType();
-        GraphType t = DefaultGraphType.mixed();
-        if (type1.isDirected() && type2.isDirected()) {
-            t = t.asDirected();
-        }
+        GraphType t = DefaultGraphType.simple();
         if (type1.isUndirected() && type2.isUndirected()) {
             t = t.asUndirected();
         }

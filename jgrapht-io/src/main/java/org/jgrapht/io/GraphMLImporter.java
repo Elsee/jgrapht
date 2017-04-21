@@ -17,15 +17,9 @@
  */
 package org.jgrapht.io;
 
-import java.io.InputStream;
-import java.io.Reader;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
+import org.jgrapht.Graph;
+import org.xml.sax.*;
+import org.xml.sax.helpers.DefaultHandler;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.SAXParser;
@@ -34,14 +28,10 @@ import javax.xml.transform.Source;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
-
-import org.jgrapht.Graph;
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
+import java.io.InputStream;
+import java.io.Reader;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * Imports a graph from a GraphML data source.
@@ -114,10 +104,7 @@ import org.xml.sax.helpers.DefaultHandler;
  * <p>
  * The provided graph object, where the imported graph will be stored, must be able to support the
  * features of the graph that is read. For example if the GraphML file contains self-loops then the
- * graph provided must also support self-loops. The same for multiple edges. Moreover, the parser
- * completely ignores the attribute "edgedefault" which denotes whether an edge is directed or not.
- * Whether edges are directed or not depends on the underlying implementation of the user provided
- * graph object.
+ * graph provided must also support self-loops. The same for multiple edges.
  * 
  * <p>
  * The importer validates the input using the 1.0

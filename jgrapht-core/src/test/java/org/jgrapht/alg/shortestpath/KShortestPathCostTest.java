@@ -17,14 +17,19 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.io.*;
-import java.util.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.BiconnectedGraph;
+import org.jgrapht.alg.NotBiconnectedGraph;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.SimpleWeightedGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.*;
-import org.jgrapht.graph.*;
-
-import junit.framework.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Guillaume Boulmier
@@ -59,46 +64,6 @@ public class KShortestPathCostTest
             Arrays.asList(new Object[] { graph.eS1, graph.e13 }), pathElement.getEdgeList());
     }
 
-    public void testPicture1Graph()
-    {
-        Picture1Graph picture1Graph = new Picture1Graph();
-
-        int maxSize = 10;
-
-        KShortestPaths<String, DefaultWeightedEdge> pathFinder =
-            new KShortestPaths<>(picture1Graph, maxSize);
-
-        // assertEquals(2, pathFinder.getPaths("v5").size());
-
-        List<GraphPath<String, DefaultWeightedEdge>> pathElements = pathFinder.getPaths("vS", "v5");
-        GraphPath<String, DefaultWeightedEdge> pathElement = pathElements.get(0);
-        assertEquals(
-            Arrays.asList(new Object[] { picture1Graph.eS1, picture1Graph.e15 }),
-            pathElement.getEdgeList());
-
-        List<String> vertices = pathElement.getVertexList();
-        assertEquals(Arrays.asList(new Object[] { "vS", "v1", "v5" }), vertices);
-
-        pathElement = pathElements.get(1);
-        assertEquals(
-            Arrays.asList(new Object[] { picture1Graph.eS2, picture1Graph.e25 }),
-            pathElement.getEdgeList());
-
-        vertices = pathElement.getVertexList();
-        assertEquals(Arrays.asList(new Object[] { "vS", "v2", "v5" }), vertices);
-
-        pathElements = pathFinder.getPaths("vS", "v7");
-        pathElement = pathElements.get(0);
-        double lastCost = pathElement.getWeight();
-        for (int i = 0; i < pathElements.size(); i++) {
-            pathElement = pathElements.get(i);
-            double cost = pathElement.getWeight();
-
-            assertTrue(lastCost <= cost);
-            lastCost = cost;
-        }
-    }
-
     public void testShortestPathsInIncreasingOrder()
     {
         BiconnectedGraph biconnectedGraph = new BiconnectedGraph();
@@ -118,9 +83,6 @@ public class KShortestPathCostTest
 
         NotBiconnectedGraph notBiconnectedGraph = new NotBiconnectedGraph();
         verifyShortestPathsInIncreasingOrderOfWeight(notBiconnectedGraph);
-
-        Picture1Graph picture1Graph = new Picture1Graph();
-        verifyShortestPathsInIncreasingOrderOfWeight(picture1Graph);
     }
 
     public void testShortestPathsWeightsWithMaxSizeIncreases()
@@ -142,9 +104,6 @@ public class KShortestPathCostTest
 
         NotBiconnectedGraph notBiconnectedGraph = new NotBiconnectedGraph();
         verifyShortestPathsWeightsWithMaxSizeIncreases(notBiconnectedGraph);
-
-        Picture1Graph picture1Graph = new Picture1Graph();
-        verifyShortestPathsWeightsWithMaxSizeIncreases(picture1Graph);
     }
 
     private <E> void verifyShortestPathsInIncreasingOrderOfWeight(Graph<String, E> graph)

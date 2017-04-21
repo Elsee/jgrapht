@@ -17,13 +17,16 @@
  */
 package org.jgrapht.alg.flow;
 
-import java.util.*;
-import java.util.stream.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.MaximumFlowAlgorithm;
+import org.jgrapht.alg.interfaces.MinimumSTCutAlgorithm;
+import org.jgrapht.alg.util.ToleranceDoubleComparator;
+import org.jgrapht.alg.util.extension.Extension;
+import org.jgrapht.alg.util.extension.ExtensionFactory;
+import org.jgrapht.alg.util.extension.ExtensionManager;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.alg.util.extension.*;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Base class backing algorithms allowing to derive
@@ -46,8 +49,6 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
 
     /* input network */
     protected Graph<V, E> network;
-    /* indicates whether the input graph is directed or not */
-    protected final boolean directedGraph;
     /* Used to compare floating point values */
     protected Comparator<Double> comparator;
 
@@ -78,7 +79,6 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
     public MaximumFlowAlgorithmBase(Graph<V, E> network, double epsilon)
     {
         this.network = network;
-        this.directedGraph = network.getType().isDirected();
         this.comparator = new ToleranceDoubleComparator(epsilon);
     }
 
@@ -114,43 +114,20 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
      */
     private void buildInternal()
     {
-        if (directedGraph) { // Directed graph
-            for (V v : network.vertexSet()) {
-                VertexExtensionBase vx = vertexExtensionManager.getExtension(v);
-                vx.prototype = v;
-            }
-            for (V u : network.vertexSet()) {
-                VertexExtensionBase ux = vertexExtensionManager.getExtension(u);
-
-                for (E e : network.outgoingEdgesOf(u)) {
-                    V v = network.getEdgeTarget(e);
-                    VertexExtensionBase vx = vertexExtensionManager.getExtension(v);
-
-                    AnnotatedFlowEdge forwardEdge = createEdge(ux, vx, e, network.getEdgeWeight(e));
-                    AnnotatedFlowEdge backwardEdge = createBackwardEdge(forwardEdge);
-
-                    ux.getOutgoing().add(forwardEdge);
-
-                    if (backwardEdge.prototype == null) {
-                        vx.getOutgoing().add(backwardEdge);
-                    }
-                }
-            }
-        } else { // Undirected graph
-            for (V v : network.vertexSet()) {
-                VertexExtensionBase vx = vertexExtensionManager.getExtension(v);
-                vx.prototype = v;
-            }
-            for (E e : network.edgeSet()) {
-                VertexExtensionBase ux =
-                    vertexExtensionManager.getExtension(network.getEdgeSource(e));
-                VertexExtensionBase vx =
-                    vertexExtensionManager.getExtension(network.getEdgeTarget(e));
-                AnnotatedFlowEdge forwardEdge = createEdge(ux, vx, e, network.getEdgeWeight(e));
-                AnnotatedFlowEdge backwardEdge = createBackwardEdge(forwardEdge);
-                ux.getOutgoing().add(forwardEdge);
-                vx.getOutgoing().add(backwardEdge);
-            }
+        // Undirected graph
+        for (V v : network.vertexSet()) {
+            VertexExtensionBase vx = vertexExtensionManager.getExtension(v);
+            vx.prototype = v;
+        }
+        for (E e : network.edgeSet()) {
+            VertexExtensionBase ux =
+                vertexExtensionManager.getExtension(network.getEdgeSource(e));
+            VertexExtensionBase vx =
+                vertexExtensionManager.getExtension(network.getEdgeTarget(e));
+            AnnotatedFlowEdge forwardEdge = createEdge(ux, vx, e, network.getEdgeWeight(e));
+            AnnotatedFlowEdge backwardEdge = createBackwardEdge(forwardEdge);
+            ux.getOutgoing().add(forwardEdge);
+            vx.getOutgoing().add(backwardEdge);
         }
     }
 
@@ -172,19 +149,12 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
         E backwardPrototype =
             network.getEdge(forwardEdge.target.prototype, forwardEdge.source.prototype);
 
-        if (directedGraph && backwardPrototype != null) { // if edge exists in directed input graph
-            backwardEdge = createEdge(
-                forwardEdge.target, forwardEdge.source, backwardPrototype,
-                network.getEdgeWeight(backwardPrototype));
-        } else {
-            backwardEdge = edgeExtensionManager.createExtension();
-            backwardEdge.source = forwardEdge.target;
-            backwardEdge.target = forwardEdge.source;
-            if (!directedGraph) { // Undirected graph: if (u,v) exists, then so much (v,u)
-                backwardEdge.capacity = network.getEdgeWeight(backwardPrototype);
-                backwardEdge.prototype = backwardPrototype;
-            }
-        }
+        backwardEdge = edgeExtensionManager.createExtension();
+        backwardEdge.source = forwardEdge.target;
+        backwardEdge.target = forwardEdge.source;
+        backwardEdge.capacity = network.getEdgeWeight(backwardPrototype);
+        backwardEdge.prototype = backwardPrototype;
+
 
         forwardEdge.inverse = backwardEdge;
         backwardEdge.inverse = forwardEdge;
@@ -240,8 +210,7 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
         for (E e : network.edgeSet()) {
             AnnotatedFlowEdge annotatedFlowEdge = edgeExtensionManager.getExtension(e);
             maxFlow.put(
-                e, directedGraph ? annotatedFlowEdge.flow
-                    : Math.max(annotatedFlowEdge.flow, annotatedFlowEdge.inverse.flow));
+                e, Math.max(annotatedFlowEdge.flow, annotatedFlowEdge.inverse.flow));
         }
 
         return maxFlow;
@@ -364,8 +333,7 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
     }
 
     /**
-     * Returns the direction of the flow on an edge (u,v). In case (u,v) is a directed edge (arc),
-     * this function will always return the edge target v. However, if (u,v) is an edge in an
+     * Returns the direction of the flow on an edge (u,v). If (u,v) is an edge in an
      * undirected graph, flow may go through the edge in either side. If the flow goes from u to v,
      * we return v, otherwise u. If the flow on an edge equals 0, the returned value has no meaning.
      * 
@@ -378,9 +346,6 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
             throw new IllegalArgumentException(
                 "Cannot query the flow on an edge which does not exist in the input graph!");
         AnnotatedFlowEdge annotatedFlowEdge = edgeExtensionManager.getExtension(e);
-
-        if (directedGraph)
-            return annotatedFlowEdge.getTarget().prototype;
 
         AnnotatedFlowEdge inverseEdge = annotatedFlowEdge.getInverse();
         if (annotatedFlowEdge.flow > inverseEdge.flow)
@@ -429,23 +394,14 @@ public abstract class MaximumFlowAlgorithmBase<V, E>
         cutEdges = new LinkedHashSet<>();
 
         Set<V> p1 = getSourcePartition();
-        if (directedGraph) {
-            for (V vertex : p1) {
-                cutEdges.addAll(
-                    network
-                        .outgoingEdgesOf(vertex).stream()
-                        .filter(edge -> !p1.contains(network.getEdgeTarget(edge)))
-                        .collect(Collectors.toList()));
-            }
-        } else {
-            cutEdges.addAll(
-                network
-                    .edgeSet().stream()
-                    .filter(
-                        e -> p1.contains(network.getEdgeSource(e))
-                            ^ p1.contains(network.getEdgeTarget(e)))
-                    .collect(Collectors.toList()));
-        }
+
+        cutEdges.addAll(
+            network
+                .edgeSet().stream()
+                .filter(
+                    e -> p1.contains(network.getEdgeSource(e))
+                        ^ p1.contains(network.getEdgeTarget(e)))
+                .collect(Collectors.toList()));
         return cutEdges;
     }
 

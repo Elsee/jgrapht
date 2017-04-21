@@ -17,16 +17,12 @@
  */
 package org.jgrapht.generate;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Random;
-
 import org.jgrapht.Graph;
 import org.jgrapht.GraphTests;
 import org.jgrapht.VertexFactory;
 import org.jgrapht.alg.util.AliasMethodSampler;
+
+import java.util.*;
 
 /**
  * Kleinberg's small-world graph generator.
@@ -36,14 +32,9 @@ import org.jgrapht.alg.util.AliasMethodSampler;
  * Perspective, in Proc. 32nd ACM Symp. Theory of Comp., 163-170, 2000.
  * 
  * <p>
- * The basic structure is a a two-dimensional grid and allows for edges to be directed. It begins
+ * The basic structure is a a two-dimensional grid. It begins
  * with a set of nodes (representing individuals in the social network) that are identified with the
- * set of lattice points in an n x n square. For a universal constant {@literal p >= 1}, the node u
- * has a directed edge to every other node within lattice distance p (these are its local contacts).
- * For universal constants {@literal q >= 0} and {@literal r >= 0}, we also construct directed edges
- * from u to q other nodes (the long-range contacts) using independent random trials; the i-th
- * directed edge from u has endpoint v with probability proportional to {@literal 1/d(u,v)^r} where
- * d(u,v) is the lattice distance from u to v.
+ * set of lattice points in an n x n square.
  * 
  * @author Dimitrios Michail
  * @since February 2017
@@ -152,10 +143,9 @@ public class KleinbergSmallWorldGraphGenerator<V, E>
         }
 
         /*
-         * Ensure directed or undirected
+         * Ensure undirected
          */
-        GraphTests.requireDirectedOrUndirected(target);
-        boolean isDirected = target.getType().isDirected();
+        GraphTests.requireUndirected(target);
 
         /*
          * Create vertices
@@ -183,9 +173,6 @@ public class KleinbergSmallWorldGraphGenerator<V, E>
                         int t = (i + di) * n + (j + dj);
                         if (t < 0 || t == vi || t >= n * n) {
                             continue;
-                        }
-                        if (Math.abs(di) + Math.abs(dj) <= p && (isDirected || t > i * n + j)) {
-                            target.addEdge(v, nodes.get(t));
                         }
                     }
                 }

@@ -17,9 +17,10 @@
  */
 package org.jgrapht.graph;
 
-import java.util.*;
+import org.jgrapht.EnhancedTestCase;
+import org.jgrapht.Graph;
 
-import org.jgrapht.*;
+import java.util.Iterator;
 
 /**
  * Unit tests for MaskVertexSet.
@@ -29,7 +30,7 @@ import org.jgrapht.*;
 public class MaskVertexSetTest
     extends EnhancedTestCase
 {
-    private Graph<String, DefaultEdge> directed;
+    private Graph<String, DefaultEdge> undirected;
     private String v1 = "v1";
     private String v2 = "v2";
     private String v3 = "v3";
@@ -41,17 +42,17 @@ public class MaskVertexSetTest
     @Override
     protected void setUp()
     {
-        directed = new DefaultDirectedGraph<>(DefaultEdge.class);
+        undirected = new SimpleGraph<>(DefaultEdge.class);
 
-        directed.addVertex(v1);
-        directed.addVertex(v2);
-        directed.addVertex(v3);
-        directed.addVertex(v4);
+        undirected.addVertex(v1);
+        undirected.addVertex(v2);
+        undirected.addVertex(v3);
+        undirected.addVertex(v4);
 
-        e1 = directed.addEdge(v1, v2);
-        directed.addEdge(v2, v3);
+        e1 = undirected.addEdge(v1, v2);
+        undirected.addEdge(v2, v3);
 
-        testMaskVertexSet = new MaskVertexSet<>(directed.vertexSet(), v -> v == v1);
+        testMaskVertexSet = new MaskVertexSet<>(undirected.vertexSet(), v -> v == v1);
     }
 
     public void testContains()

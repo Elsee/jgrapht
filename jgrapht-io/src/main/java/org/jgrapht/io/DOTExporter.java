@@ -17,11 +17,12 @@
  */
 package org.jgrapht.io;
 
-import java.io.*;
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.AbstractBaseGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * Exports a graph into a DOT file.
@@ -149,9 +150,7 @@ public class DOTExporter<V, E>
         PrintWriter out = new PrintWriter(writer);
         String indent = "  ";
         String connector;
-        String header = (g instanceof AbstractBaseGraph
-            && !((AbstractBaseGraph<V, E>) g).isAllowingMultipleEdges())
-                ? DOTUtils.DONT_ALLOW_MULTIPLE_EDGES_KEYWORD + " " : "";
+        String header = "";
         String graphId = graphIDProvider.getName(g);
         if (graphId == null || graphId.trim().isEmpty()) {
             graphId = DEFAULT_GRAPH_ID;
@@ -161,13 +160,8 @@ public class DOTExporter<V, E>
                 "Generated graph ID '" + graphId
                     + "' is not valid with respect to the .dot language");
         }
-        if (g.getType().isDirected()) {
-            header += DOTUtils.DIRECTED_GRAPH_KEYWORD;
-            connector = " " + DOTUtils.DIRECTED_GRAPH_EDGEOP + " ";
-        } else {
-            header += DOTUtils.UNDIRECTED_GRAPH_KEYWORD;
-            connector = " " + DOTUtils.UNDIRECTED_GRAPH_EDGEOP + " ";
-        }
+        header += DOTUtils.UNDIRECTED_GRAPH_KEYWORD;
+        connector = " " + DOTUtils.UNDIRECTED_GRAPH_EDGEOP + " ";
         header += " " + graphId + " {";
         out.println(header);
         for (V v : g.vertexSet()) {

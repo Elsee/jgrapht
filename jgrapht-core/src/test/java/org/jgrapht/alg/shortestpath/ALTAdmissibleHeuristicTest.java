@@ -17,19 +17,24 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.interfaces.AStarAdmissibleHeuristic;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.alg.util.ToleranceDoubleComparator;
+import org.jgrapht.generate.GnpRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.IntegerVertexFactory;
+import org.jgrapht.graph.WeightedPseudograph;
+import org.junit.Test;
 
 import java.util.*;
-import java.util.function.*;
+import java.util.function.Supplier;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
-import org.junit.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Dimitrios Michail
@@ -48,7 +53,6 @@ public class ALTAdmissibleHeuristicTest
         Random rng = new Random(47);
 
         List<Supplier<Graph<Integer, DefaultWeightedEdge>>> graphs = new ArrayList<>();
-        graphs.add(() -> new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class));
         graphs.add(() -> new WeightedPseudograph<>(DefaultWeightedEdge.class));
 
         for (Supplier<Graph<Integer, DefaultWeightedEdge>> gSupplier : graphs) {
@@ -99,7 +103,6 @@ public class ALTAdmissibleHeuristicTest
         Random rng = new Random(33);
 
         List<Supplier<Graph<Integer, DefaultWeightedEdge>>> graphs = new ArrayList<>();
-        graphs.add(() -> new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class));
         graphs.add(() -> new WeightedPseudograph<>(DefaultWeightedEdge.class));
 
         Comparator<Double> comparator = new ToleranceDoubleComparator();

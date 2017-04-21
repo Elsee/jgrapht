@@ -17,13 +17,12 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
-
-import org.jgrapht.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
 import org.jgrapht.graph.*;
 import org.jgrapht.util.TypeUtil;
 
-import junit.framework.*;
+import java.util.*;
 
 /**
  * .
@@ -40,7 +39,7 @@ public class GnmRandomGraphGeneratorTest
     public void testZeroNodes()
     {
         GraphGenerator<Integer, DefaultEdge, Integer> gen = new GnmRandomGraphGenerator<>(0, 0);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
         gen.generateGraph(g, new IntegerVertexFactory(), null);
         assertEquals(0, g.vertexSet().size());
         assertEquals(0, g.edgeSet().size());
@@ -49,7 +48,7 @@ public class GnmRandomGraphGeneratorTest
     public void testZeroEdge()
     {
         GraphGenerator<Integer, DefaultEdge, Integer> gen = new GnmRandomGraphGenerator<>(10, 0);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
+        Graph<Integer, DefaultEdge> g = new Pseudograph<>(DefaultEdge.class);
         gen.generateGraph(g, new IntegerVertexFactory(), null);
         assertEquals(10, g.vertexSet().size());
         assertEquals(0, g.edgeSet().size());
@@ -68,76 +67,6 @@ public class GnmRandomGraphGeneratorTest
             fail("Bad parameter");
         } catch (IllegalArgumentException e) {
         }
-    }
-
-    public void testDirectedGraphGnp1()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnmRandomGraphGenerator<>(6, 18, SEED);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(1), null);
-
-        int[][] edges = { { 6, 5 }, { 1, 6 }, { 5, 6 }, { 3, 4 }, { 6, 4 }, { 2, 1 }, { 3, 5 },
-            { 1, 2 }, { 1, 3 }, { 2, 5 }, { 4, 3 }, { 2, 3 }, { 5, 4 }, { 1, 4 }, { 2, 6 },
-            { 6, 1 }, { 4, 6 }, { 3, 1 } };
-
-        assertEquals(6, g.vertexSet().size());
-        for (int[] e : edges) {
-            assertTrue(g.containsEdge(e[0], e[1]));
-        }
-        assertEquals(edges.length, g.edgeSet().size());
-    }
-
-    public void testDirectedGraphGnp1WithLoops()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnmRandomGraphGenerator<>(6, 18, SEED, true, false);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(1), null);
-
-        int[][] edges = { { 6, 5 }, { 3, 3 }, { 1, 6 }, { 5, 6 }, { 3, 4 }, { 6, 4 }, { 2, 1 },
-            { 3, 5 }, { 1, 2 }, { 1, 3 }, { 2, 5 }, { 4, 3 }, { 2, 3 }, { 2, 2 }, { 5, 4 },
-            { 2, 2 }, { 1, 4 }, { 5, 5 } };
-
-        assertEquals(6, g.vertexSet().size());
-        for (int[] e : edges) {
-            assertTrue(g.containsEdge(e[0], e[1]));
-        }
-        assertEquals(edges.length, g.edgeSet().size());
-    }
-
-    public void testDirectedGraphGnp1WithMultipleEdges()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnmRandomGraphGenerator<>(6, 18, SEED, false, true);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(1), null);
-
-        int[][] edges = { { 6, 5 }, { 1, 6 }, { 5, 6 }, { 3, 4 }, { 6, 4 }, { 2, 1 }, { 3, 5 },
-            { 1, 2 }, { 6, 4 }, { 1, 6 }, { 1, 3 }, { 2, 5 }, { 3, 4 }, { 4, 3 }, { 2, 3 },
-            { 2, 3 }, { 5, 4 }, { 1, 6 } };
-        assertEquals(6, g.vertexSet().size());
-        for (int[] e : edges) {
-            assertTrue(g.containsEdge(e[0], e[1]));
-        }
-        assertEquals(edges.length, g.edgeSet().size());
-    }
-
-    public void testDirectedGraphGnp1WithLoopsAndMultipleEdges()
-    {
-        GraphGenerator<Integer, DefaultEdge, Integer> gen =
-            new GnmRandomGraphGenerator<>(6, 18, SEED, true, true);
-        Graph<Integer, DefaultEdge> g = new DirectedPseudograph<>(DefaultEdge.class);
-        gen.generateGraph(g, new IntegerVertexFactory(1), null);
-
-        int[][] edges = { { 6, 5 }, { 3, 3 }, { 1, 6 }, { 5, 6 }, { 3, 4 }, { 6, 4 }, { 2, 1 },
-            { 3, 5 }, { 1, 2 }, { 6, 4 }, { 1, 6 }, { 1, 3 }, { 2, 5 }, { 3, 4 }, { 4, 3 },
-            { 2, 3 }, { 2, 2 }, { 2, 3 } };
-        assertEquals(6, g.vertexSet().size());
-        for (int[] e : edges) {
-            assertTrue(g.containsEdge(e[0], e[1]));
-        }
-        assertEquals(edges.length, g.edgeSet().size());
     }
 
     public void testUndirectedGraphGnp1()
@@ -179,7 +108,7 @@ public class GnmRandomGraphGeneratorTest
         try {
             GraphGenerator<Integer, DefaultEdge, Integer> gen =
                 new GnmRandomGraphGenerator<>(6, 18, SEED, true, false);
-            Graph<Integer, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
+            Graph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
             gen.generateGraph(g, new IntegerVertexFactory(), null);
             fail("Exception expected");
         } catch (IllegalArgumentException e) {
@@ -188,38 +117,11 @@ public class GnmRandomGraphGeneratorTest
         try {
             GraphGenerator<Integer, DefaultEdge, Integer> gen =
                 new GnmRandomGraphGenerator<>(6, 18, SEED, false, true);
-            Graph<Integer, DefaultEdge> g = new SimpleDirectedGraph<>(DefaultEdge.class);
+            Graph<Integer, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
             gen.generateGraph(g, new IntegerVertexFactory(), null);
             fail("Exception expected");
         } catch (IllegalArgumentException e) {
         }
-    }
-
-    public void testEdgeLimitsDirected()
-    {
-        try {
-            GraphGenerator<Integer, DefaultEdge, Integer> gen1 =
-                new GnmRandomGraphGenerator<>(5, 21, SEED, false, false);
-            Graph<Integer, DefaultEdge> g1 = new SimpleDirectedGraph<>(DefaultEdge.class);
-            gen1.generateGraph(g1, new IntegerVertexFactory(), null);
-            fail("Exception expected");
-        } catch (IllegalArgumentException e) {
-        }
-
-        GraphGenerator<Integer, DefaultEdge, Integer> gen2 =
-            new GnmRandomGraphGenerator<>(5, 20, SEED, false, false);
-        Graph<Integer, DefaultEdge> g2 = new SimpleDirectedGraph<>(DefaultEdge.class);
-        gen2.generateGraph(g2, new IntegerVertexFactory(), null);
-
-        GraphGenerator<Integer, DefaultEdge, Integer> gen3 =
-            new GnmRandomGraphGenerator<>(5, 25, SEED, true, false);
-        Graph<Integer, DefaultEdge> g3 = new DirectedPseudograph<>(DefaultEdge.class);
-        gen3.generateGraph(g3, new IntegerVertexFactory(), null);
-
-        GraphGenerator<Integer, DefaultEdge, Integer> gen4 =
-            new GnmRandomGraphGenerator<>(5, 25, SEED, false, true);
-        Graph<Integer, DefaultEdge> g4 = new DirectedPseudograph<>(DefaultEdge.class);
-        gen4.generateGraph(g4, new IntegerVertexFactory(), null);
     }
 
     public void testEdgeLimitsUndirected()
@@ -252,76 +154,39 @@ public class GnmRandomGraphGeneratorTest
     public void testMaximumAllowedEdges()
     {
         // undirected graphs
-        boolean isDirected = false;
         assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, false, false));
+            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, false, false));
         assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, false, true));
+            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, false, true));
         assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, true, false));
+            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, true, false));
         assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, true, true));
+            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, true, true));
 
         assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, false, false));
+            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, false, false));
         assertEquals(
-            1, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, true, false));
+            1, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1,true, false));
         assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, false, true));
+            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, false, true));
         assertEquals(
             Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, true, true));
+            GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, true, true));
 
         assertEquals(
-            45, GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, false, false));
+            45, GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, false, false));
         assertEquals(
-            55, GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, true, false));
-        assertEquals(
-            Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, false, true));
+            55, GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, true, false));
         assertEquals(
             Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, true, true));
-
+            GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, false, true));
         assertEquals(
             Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(200000, isDirected, false, false));
-
-        // directed graphs
-        isDirected = true;
-        assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, false, false));
-        assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, false, true));
-        assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, true, false));
-        assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(0, isDirected, true, true));
-
-        assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, false, false));
-        assertEquals(
-            2, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, true, false));
-        assertEquals(
-            0, GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, false, true));
-        assertEquals(
-            Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(1, isDirected, true, true));
-
-        assertEquals(
-            90, GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, false, false));
-        assertEquals(
-            110, GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, true, false));
-        assertEquals(
-            Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, false, true));
-        assertEquals(
-            Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, isDirected, true, true));
+            GnmRandomGraphGenerator.computeMaximumAllowedEdges(10, true, true));
 
         assertEquals(
             Integer.MAX_VALUE,
-            GnmRandomGraphGenerator.computeMaximumAllowedEdges(200000, isDirected, false, false));
+            GnmRandomGraphGenerator.computeMaximumAllowedEdges(200000, false, false));
     }
 
     public void testCannotGuessGraphType()
@@ -363,25 +228,6 @@ public class GnmRandomGraphGeneratorTest
         }
     }
 
-    public void testGenerateDirectedGraph()
-    {
-        List<Graph<Integer, DefaultEdge>> graphArray = new ArrayList<>();
-        for (int i = 0; i < 4; ++i) {
-            graphArray.add(new SimpleDirectedGraph<>(DefaultEdge.class));
-        }
-
-        generateGraphs(graphArray, 11, 100);
-
-        assertTrue(
-            new EdgeTopologyCompare<Integer, DefaultEdge>()
-                .compare(graphArray.get(0), graphArray.get(2)));
-
-        assertTrue(
-            new EdgeTopologyCompare<Integer, DefaultEdge>()
-                .compare(graphArray.get(1), graphArray.get(3)));
-
-    }
-
     public void testGenerateListenableUndirectedGraph()
     {
         List<Graph<Integer, DefaultEdge>> graphArray = new ArrayList<>();
@@ -404,7 +250,7 @@ public class GnmRandomGraphGeneratorTest
     {
         GraphGenerator<String, DefaultEdge, String> randomGen =
             new GnmRandomGraphGenerator<>(10, 3);
-        Graph<String, DefaultEdge> graph = new SimpleDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
         try {
             randomGen.generateGraph(graph, new ClassBasedVertexFactory<>(String.class), null);
             fail("IllegalArgumentException expected");
@@ -512,7 +358,6 @@ public class GnmRandomGraphGeneratorTest
             // create a friendlier representation of an edge
             // by order, like 2nd->3rd instead of B->A
             // use the map to convert vertex to order
-            // on directed graph, edge A->B must be (A,B)
             // on undirected graph, edge A-B can be (A,B) or (B,A)
 
             this.labelsEdgesSet = new HashSet<>(edgeSet.size());

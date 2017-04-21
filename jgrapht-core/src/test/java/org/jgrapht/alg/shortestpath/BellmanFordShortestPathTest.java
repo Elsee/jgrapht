@@ -17,11 +17,13 @@
  */
 package org.jgrapht.alg.shortestpath;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.SingleSourcePaths;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.WeightedPseudograph;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.interfaces.ShortestPathAlgorithm.*;
-import org.jgrapht.graph.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * .
@@ -56,78 +58,6 @@ public class BellmanFordShortestPathTest
         Graph<String, DefaultWeightedEdge> g, String src, String dest)
     {
         return new BellmanFordShortestPath<>(g).getPaths(src).getPath(dest).getEdgeList();
-    }
-
-    public void testWithNegativeEdges()
-    {
-        Graph<String, DefaultWeightedEdge> g = createWithBias(true);
-
-        List<DefaultWeightedEdge> path;
-
-        path = findPathBetween(g, V1, V4);
-        assertEquals(Arrays.asList(new DefaultWeightedEdge[] { e13, e34 }), path);
-
-        path = findPathBetween(g, V1, V5);
-        assertEquals(Arrays.asList(new DefaultWeightedEdge[] { e15 }), path);
-    }
-
-    public void testWikipediaExampleBellmanFord()
-    {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-        g.addVertex("w");
-        g.addVertex("y");
-        g.addVertex("x");
-        g.addVertex("z");
-        g.addVertex("s");
-        g.setEdgeWeight(g.addEdge("w", "z"), 2);
-        g.setEdgeWeight(g.addEdge("y", "w"), 4);
-        g.setEdgeWeight(g.addEdge("x", "w"), 6);
-        g.setEdgeWeight(g.addEdge("x", "y"), 3);
-        g.setEdgeWeight(g.addEdge("z", "x"), -7);
-        g.setEdgeWeight(g.addEdge("y", "z"), 5);
-        g.setEdgeWeight(g.addEdge("z", "y"), -3);
-        g.setEdgeWeight(g.addEdge("s", "w"), 0.0);
-        g.setEdgeWeight(g.addEdge("s", "y"), 0.0);
-        g.setEdgeWeight(g.addEdge("s", "x"), 0.0);
-        g.setEdgeWeight(g.addEdge("s", "z"), 0.0);
-
-        BellmanFordShortestPath<String, DefaultWeightedEdge> alg = new BellmanFordShortestPath<>(g);
-        SingleSourcePaths<String, DefaultWeightedEdge> paths = alg.getPaths("s");
-        assertEquals(0d, paths.getPath("s").getWeight(), 1e-9);
-        assertEquals(-1d, paths.getPath("w").getWeight(), 1e-9);
-        assertEquals(-4d, paths.getPath("y").getWeight(), 1e-9);
-        assertEquals(-7d, paths.getPath("x").getWeight(), 1e-9);
-        assertEquals(0d, paths.getPath("z").getWeight(), 1e-9);
-    }
-
-    public void testNegativeCycleDetection()
-    {
-        DirectedWeightedPseudograph<String, DefaultWeightedEdge> g =
-            new DirectedWeightedPseudograph<>(DefaultWeightedEdge.class);
-        g.addVertex("w");
-        g.addVertex("y");
-        g.addVertex("x");
-        g.addVertex("z");
-        g.addVertex("s");
-        g.setEdgeWeight(g.addEdge("w", "z"), 2);
-        g.setEdgeWeight(g.addEdge("y", "w"), 4);
-        g.setEdgeWeight(g.addEdge("x", "w"), 6);
-        g.setEdgeWeight(g.addEdge("x", "y"), 3);
-        g.setEdgeWeight(g.addEdge("z", "x"), -7);
-        g.setEdgeWeight(g.addEdge("y", "z"), 3);
-        g.setEdgeWeight(g.addEdge("z", "y"), -3);
-        g.setEdgeWeight(g.addEdge("s", "w"), 0.0);
-        g.setEdgeWeight(g.addEdge("s", "y"), 0.0);
-        g.setEdgeWeight(g.addEdge("s", "x"), 0.0);
-        g.setEdgeWeight(g.addEdge("s", "z"), 0.0);
-
-        try {
-            new BellmanFordShortestPath<>(g).getPaths("s");
-            fail("Negative-weight cycle not detected");
-        } catch (RuntimeException e) {
-            assertEquals("Graph contains a negative-weight cycle", e.getMessage());
-        }
     }
 
     public void testNegativeEdgeUndirectedGraph()

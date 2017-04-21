@@ -17,8 +17,9 @@
  */
 package org.jgrapht.ext;
 
-import java.io.*;
-import org.jgrapht.*;
+import org.jgrapht.Graph;
+
+import java.io.Reader;
 
 /**
  * Imports a graph from a GraphML data source.
@@ -91,10 +92,7 @@ import org.jgrapht.*;
  * <p>
  * The provided graph object, where the imported graph will be stored, must be able to support the
  * features of the graph that is read. For example if the GraphML file contains self-loops then the
- * graph provided must also support self-loops. The same for multiple edges. Moreover, the parser
- * completely ignores the attribute "edgedefault" which denotes whether an edge is directed or not.
- * Whether edges are directed or not depends on the underlying implementation of the user provided
- * graph object.
+ * graph provided must also support self-loops. The same for multiple edges.
  * 
  * <p>
  * The importer validates the input using the 1.0

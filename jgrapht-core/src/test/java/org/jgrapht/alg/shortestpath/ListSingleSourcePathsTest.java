@@ -17,14 +17,20 @@
  */
 package org.jgrapht.alg.shortestpath;
 
+import org.jgrapht.GraphPath;
+import org.jgrapht.generate.GnpRandomGraphGenerator;
+import org.jgrapht.generate.GraphGenerator;
+import org.jgrapht.graph.DefaultWeightedEdge;
+import org.jgrapht.graph.IntegerVertexFactory;
+import org.jgrapht.graph.Pseudograph;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
-
-import java.util.*;
-
-import org.jgrapht.*;
-import org.jgrapht.generate.*;
-import org.jgrapht.graph.*;
-import org.junit.*;
 
 /**
  * @author Dimitrios Michail
@@ -36,8 +42,8 @@ public class ListSingleSourcePathsTest
     public void test()
     {
         int n = 50;
-        DirectedPseudograph<Integer, DefaultWeightedEdge> g =
-            new DirectedPseudograph<>(DefaultWeightedEdge.class);
+        Pseudograph<Integer, DefaultWeightedEdge> g =
+            new Pseudograph<>(DefaultWeightedEdge.class);
         GraphGenerator<Integer, DefaultWeightedEdge, Integer> gen =
             new GnpRandomGraphGenerator<>(n, 0.7);
         gen.generateGraph(g, new IntegerVertexFactory(), null);

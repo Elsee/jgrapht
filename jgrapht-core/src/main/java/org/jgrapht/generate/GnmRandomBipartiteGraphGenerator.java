@@ -17,9 +17,12 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
 
-import org.jgrapht.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Create a random bipartite graph based on the G(n, M) Erdős–Rényi model. See the Wikipedia article
@@ -29,7 +32,7 @@ import org.jgrapht.*;
  * .
  * 
  * The user provides the sizes n1 and n2 of the two partitions (n1+n2=n) and a number m which is the
- * total number of edges to create. The generator supports both directed and undirected graphs.
+ * total number of edges to create. The generator supports undirected graphs.
  *
  * @author Michael Behrisch
  * @author Dimitrios Michail
@@ -144,17 +147,10 @@ public class GnmRandomBipartiteGraphGenerator<V, E>
                 "Vertex factory did not produce " + (n1 + n2) + " distinct vertices.");
         }
 
-        // check if graph is directed
-        final boolean isDirected = target.getType().isDirected();
-
         int maxAllowedEdges = Integer.MAX_VALUE;
         try {
-            if (isDirected) {
-                maxAllowedEdges = Math.multiplyExact(2, Math.multiplyExact(n1, n2));
-            } else {
-                // assume undirected
-                maxAllowedEdges = Math.multiplyExact(n1, n2);
-            }
+            // assume undirected
+            maxAllowedEdges = Math.multiplyExact(n1, n2);
         } catch (ArithmeticException e) {
             maxAllowedEdges = Integer.MAX_VALUE;
         }
@@ -171,13 +167,6 @@ public class GnmRandomBipartiteGraphGenerator<V, E>
             // find random edge
             V s = partitionA.get(rng.nextInt(n1));
             V t = partitionB.get(rng.nextInt(n2));
-
-            // if directed, maybe reverse direction
-            if (isDirected && rng.nextBoolean()) {
-                V tmp = s;
-                s = t;
-                t = tmp;
-            }
 
             // check whether to add the edge
             if (!target.containsEdge(s, t)) {

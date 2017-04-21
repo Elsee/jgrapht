@@ -17,19 +17,18 @@
  */
 package org.jgrapht.io;
 
-import java.io.*;
-import java.util.*;
+import junit.framework.TestCase;
+import org.jgrapht.Graph;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.Multigraph;
+import org.jgrapht.graph.SimpleGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.io.ComponentAttributeProvider;
-import org.jgrapht.io.ComponentNameProvider;
-import org.jgrapht.io.DOTExporter;
-import org.jgrapht.io.ExportException;
-import org.jgrapht.io.IntegerComponentNameProvider;
-import org.jgrapht.io.StringComponentNameProvider;
-
-import junit.framework.*;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * .
@@ -95,7 +94,7 @@ public class DOTExporterTest
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         exporter.exportGraph(g, os);
         String res = new String(os.toByteArray(), "UTF-8");
-        assertEquals((strict) ? "strict " + UNDIRECTED : UNDIRECTED, res);
+        assertEquals(UNDIRECTED, res);
     }
 
     public void testValidNodeIDs()
@@ -107,14 +106,14 @@ public class DOTExporterTest
         List<String> validVertices =
             Arrays.asList("-9.78", "-.5", "12", "a", "12", "abc_78", "\"--34asdf\"");
         for (String vertex : validVertices) {
-            Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+            Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
             graph.addVertex(vertex);
             exporter.exportGraph(graph, new ByteArrayOutputStream());
         }
 
         List<String> invalidVertices = Arrays.asList("2test", "--4", "foo-bar", "", "t:32");
         for (String vertex : invalidVertices) {
-            Graph<String, DefaultEdge> graph = new DefaultDirectedGraph<>(DefaultEdge.class);
+            Graph<String, DefaultEdge> graph = new SimpleGraph<>(DefaultEdge.class);
             graph.addVertex(vertex);
 
             try {
@@ -145,7 +144,7 @@ public class DOTExporterTest
                     }
                 });
 
-        final String correctResult = "strict graph " + customID + " {" + NL + "}" + NL;
+        final String correctResult = "graph " + customID + " {" + NL + "}" + NL;
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         exporter.exportGraph(g, os);

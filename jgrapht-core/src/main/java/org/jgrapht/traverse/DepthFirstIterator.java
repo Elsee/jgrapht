@@ -17,13 +17,14 @@
  */
 package org.jgrapht.traverse;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.util.TypeUtil;
 
-import org.jgrapht.*;
-import org.jgrapht.util.*;
+import java.util.ArrayDeque;
+import java.util.Deque;
 
 /**
- * A depth-first iterator for a directed and an undirected graph. For this iterator to work
+ * A depth-first iterator for an undirected graph. For this iterator to work
  * correctly the graph must not be modified during iteration. Currently there are no means to ensure
  * that, nor to fail-fast. The results of such modifications are undefined.
  *

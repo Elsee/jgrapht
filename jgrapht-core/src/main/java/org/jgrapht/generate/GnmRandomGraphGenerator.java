@@ -17,10 +17,13 @@
  */
 package org.jgrapht.generate;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.VertexFactory;
+import org.jgrapht.graph.AbstractBaseGraph;
 
-import org.jgrapht.*;
-import org.jgrapht.graph.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Random;
 
 /**
  * Create a random graph based on the G(n, M) Erdős–Rényi model. See the Wikipedia article for
@@ -44,7 +47,7 @@ import org.jgrapht.graph.*;
  * The implementation tries to guess the number of allowed edges based on the following. If
  * self-loops or multiple edges are allowed and requested, the maximum number of edges is
  * {@link Integer#MAX_VALUE}. Otherwise the maximum for undirected graphs with n vertices is
- * n(n-1)/2 while for directed n(n-1). If the graph type cannot be determined (for example using
+ * n(n-1)/2. If the graph type cannot be determined (for example using
  * adapter classes or user-created custom graph types) the generator assumes the graph is undirected
  * and therefore uses n(n-1)/2 as the maximum number of edges. If the user requests self-loops
  * and/or multiple edges and the graph type cannot be determined, the corresponding feature is
@@ -191,7 +194,7 @@ public class GnmRandomGraphGenerator<V, E>
 
         // compute maximum allowed edges
         if (m > computeMaximumAllowedEdges(
-            n, target.getType().isDirected(), createLoops, createMultipleEdges))
+            n, createLoops, createMultipleEdges))
         {
             throw new IllegalArgumentException(
                 "number of edges is not valid for the graph type " + "\n-> invalid number of edges="
@@ -253,13 +256,12 @@ public class GnmRandomGraphGenerator<V, E>
      * Return the number of allowed edges based on the graph type.
      * 
      * @param n number of nodes
-     * @param isDirected whether the graph is directed or not
      * @param createLoops if loops are allowed
      * @param createMultipleEdges if multiple edges are allowed
      * @return the number of maximum edges
      */
     static <V, E> int computeMaximumAllowedEdges(
-        int n, boolean isDirected, boolean createLoops, boolean createMultipleEdges)
+        int n, boolean createLoops, boolean createMultipleEdges)
     {
         if (n == 0) {
             return 0;
@@ -267,27 +269,19 @@ public class GnmRandomGraphGenerator<V, E>
 
         int maxAllowedEdges;
         try {
-            if (isDirected) {
-                maxAllowedEdges = Math.multiplyExact(n, n - 1);
+            // assume undirected
+            if (n % 2 == 0) {
+                maxAllowedEdges = Math.multiplyExact(n / 2, n - 1);
             } else {
-                // assume undirected
-                if (n % 2 == 0) {
-                    maxAllowedEdges = Math.multiplyExact(n / 2, n - 1);
-                } else {
-                    maxAllowedEdges = Math.multiplyExact(n, (n - 1) / 2);
-                }
+                maxAllowedEdges = Math.multiplyExact(n, (n - 1) / 2);
             }
 
             if (createLoops) {
                 if (createMultipleEdges) {
                     return Integer.MAX_VALUE;
                 } else {
-                    if (isDirected) {
-                        maxAllowedEdges = Math.addExact(maxAllowedEdges, Math.multiplyExact(2, n));
-                    } else {
-                        // assume undirected
-                        maxAllowedEdges = Math.addExact(maxAllowedEdges, n);
-                    }
+                    // assume undirected
+                    maxAllowedEdges = Math.addExact(maxAllowedEdges, n);
                 }
             } else {
                 if (createMultipleEdges) {

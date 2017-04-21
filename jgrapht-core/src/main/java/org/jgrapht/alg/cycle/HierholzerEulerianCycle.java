@@ -17,18 +17,20 @@
  */
 package org.jgrapht.alg.cycle;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.GraphTests;
+import org.jgrapht.alg.ConnectivityInspector;
+import org.jgrapht.alg.interfaces.EulerianCycleAlgorithm;
+import org.jgrapht.alg.util.Pair;
+import org.jgrapht.graph.GraphWalk;
+import org.jgrapht.util.TypeUtil;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.*;
-import org.jgrapht.alg.interfaces.*;
-import org.jgrapht.alg.util.*;
-import org.jgrapht.graph.*;
-import org.jgrapht.util.*;
+import java.util.*;
 
 /**
  * An implementation of Hierholzer's algorithm for finding an Eulerian cycle in Eulerian graphs. The
- * algorithm works with directed and undirected graphs which may contain loops and/or multiple
+ * algorithm works with undirected graphs which may contain loops and/or multiple
  * edges. The running time is linear, i.e. O(|E|) where |E| is the cardinality of the edge set of
  * the graph.
  * 
@@ -53,10 +55,6 @@ public class HierholzerEulerianCycle<V, E>
      */
     private Graph<V, E> g;
     /*
-     * Whether the graph is directed or not.
-     */
-    private boolean isDirected;
-    /*
      * Non-zero degree vertices list head.
      */
     private VertexNode verticesHead;
@@ -75,7 +73,7 @@ public class HierholzerEulerianCycle<V, E>
      */
     public boolean isEulerian(Graph<V, E> graph)
     {
-        GraphTests.requireDirectedOrUndirected(graph);
+        GraphTests.requireUndirected(graph);
 
         if (graph.vertexSet().isEmpty()) {
             // null-graph return false
@@ -83,7 +81,7 @@ public class HierholzerEulerianCycle<V, E>
         } else if (graph.edgeSet().isEmpty()) {
             // empty-graph with vertices
             return true;
-        } else if (graph.getType().isUndirected()) {
+        } else {
             // check odd degrees
             for (V v : graph.vertexSet()) {
                 if (graph.degreeOf(v) % 2 == 1) {
@@ -95,29 +93,6 @@ public class HierholzerEulerianCycle<V, E>
             for (Set<V> component : new ConnectivityInspector<V, E>(graph).connectedSets()) {
                 for (V v : component) {
                     if (graph.degreeOf(v) > 0) {
-                        if (foundComponentWithEdges) {
-                            return false;
-                        }
-                        foundComponentWithEdges = true;
-                        break;
-                    }
-                }
-            }
-            return true;
-        } else {
-            // check same in and out degrees
-            for (V v : graph.vertexSet()) {
-                if (graph.inDegreeOf(v) != graph.outDegreeOf(v)) {
-                    return false;
-                }
-            }
-            // check that at most one strongly connected component contains edges
-            boolean foundComponentWithEdges = false;
-            for (Set<V> component : new KosarajuStrongConnectivityInspector<V, E>(graph)
-                .stronglyConnectedSets())
-            {
-                for (V v : component) {
-                    if (graph.inDegreeOf(v) > 0 || graph.outDegreeOf(v) > 0) {
                         if (foundComponentWithEdges) {
                             return false;
                         }
@@ -203,7 +178,6 @@ public class HierholzerEulerianCycle<V, E>
     private void initialize(Graph<V, E> g)
     {
         this.g = g;
-        this.isDirected = g.getType().isDirected();
         this.verticesHead = null;
         this.eulerianHead = null;
 
@@ -270,7 +244,7 @@ public class HierholzerEulerianCycle<V, E>
      * partial cycles from already visited vertices.
      * 
      * @param partialCycle the partial cycle
-     * @param partialCycleStartVertex the source vertex of the first edge in the partial cycle
+     * @param partialCycleSourceVertex the source vertex of the first edge in the partial cycle
      */
     private void updateGraphAndInsertLocations(
         Pair<EdgeNode, EdgeNode> partialCycle, VertexNode partialCycleSourceVertex)
@@ -316,7 +290,7 @@ public class HierholzerEulerianCycle<V, E>
             E firstEdge = result.get(0);
             startVertex = g.getEdgeSource(firstEdge);
 
-            if (!isDirected && result.size() > 1) {
+            if (result.size() > 1) {
                 E secondEdge = result.get(1);
                 V other = g.getEdgeTarget(firstEdge);
                 if (!other.equals(g.getEdgeSource(secondEdge))
@@ -344,8 +318,8 @@ public class HierholzerEulerianCycle<V, E>
         }
         sNode.adjEdgesHead = sHead;
 
-        // if undirected and not a self-loop, add edge to target
-        if (!isDirected && !sNode.equals(tNode)) {
+        // if not a self-loop, add edge to target
+        if (!sNode.equals(tNode)) {
             EdgeNode tHead = tNode.adjEdgesHead;
             if (tHead == null) {
                 tHead = new EdgeNode(tNode, sNode, null, e, sHead, null);
@@ -421,7 +395,7 @@ public class HierholzerEulerianCycle<V, E>
         }
 
         // remove reverse
-        if (!isDirected && eNode.reverse != null) {
+        if (eNode.reverse != null) {
             EdgeNode revNode = eNode.reverse;
             VertexNode uNode = revNode.sourceNode;
             if (revNode.prev != null) {

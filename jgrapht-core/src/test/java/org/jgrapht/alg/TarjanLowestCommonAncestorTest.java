@@ -17,12 +17,16 @@
  */
 package org.jgrapht.alg;
 
-import java.util.*;
+import org.jgrapht.Graph;
+import org.jgrapht.alg.TarjanLowestCommonAncestor.LcaRequestResponse;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.SimpleGraph;
+import org.junit.Assert;
+import org.junit.Test;
 
-import org.jgrapht.*;
-import org.jgrapht.alg.TarjanLowestCommonAncestor.*;
-import org.jgrapht.graph.*;
-import org.junit.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 public class TarjanLowestCommonAncestorTest
 {
@@ -30,7 +34,7 @@ public class TarjanLowestCommonAncestorTest
     @Test
     public void testBinaryTree()
     {
-        Graph<String, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
 
         g.addVertex("a");
         g.addVertex("b");
@@ -51,7 +55,7 @@ public class TarjanLowestCommonAncestorTest
     @Test
     public void testNonBinaryTree()
     {
-        Graph<String, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
 
         g.addVertex("a");
         g.addVertex("b");
@@ -101,7 +105,7 @@ public class TarjanLowestCommonAncestorTest
     @Test
     public void testOneNode()
     {
-        Graph<String, DefaultEdge> g = new DefaultDirectedGraph<>(DefaultEdge.class);
+        Graph<String, DefaultEdge> g = new SimpleGraph<>(DefaultEdge.class);
         g.addVertex("a");
         Assert.assertEquals("a", new TarjanLowestCommonAncestor<>(g).calculate("a", "a", "a"));
     }
